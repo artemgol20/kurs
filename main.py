@@ -69,19 +69,33 @@ def create_triangle_mines():
         mines.append(Mine(x, y))
     return mines
 
-def create_column_mines():
-    # Создаем линию из 3 мин слева
-    start_x = 50  # Расстояние от левого края
-    center_y = HEIGHT // 2  # Центр экрана по вертикали
-    spacing = 100  # Расстояние между минами
+# def create_column_mines():
+#     # Создаем линию из 3 мин слева
+#     start_x = 200  # Расстояние от левого края
+#     center_y = HEIGHT // 2  # Центр экрана по вертикали
+#     spacing = 50  # Расстояние между минами
     
-    mines = []
-    # Создаем три мины: одну выше центра, одну в центре и одну ниже
-    for i in range(3):
-        y_offset = (i - 1) * spacing  # -1, 0, 1 для трех позиций
-        mines.append(Mine(start_x, center_y + y_offset))
-    return mines
+#     mines = []
+#     # Создаем три мины: одну выше центра, одну в центре и одну ниже
+#     for i in range(3):
+#         y_offset = (i - 1) * spacing  # -1, 0, 1 для трех позиций
+#         mines.append(Mine(start_x, center_y + y_offset))
+#     return mines
 
+# def create_column_mines():
+#     """
+#     Спавнит три мины в вертикальную линию слева от центра экрана.
+#     """
+#     mines = []
+#     #mines.append(Mine(-300, 425 ))
+#     mines.append(Mine(100, 400 ))
+#     mines.append(Mine(100, 400 ))
+#     mines.append(Mine(100, 400 ))
+#     #mines.append(Mine(-300, 500 ))
+#     # mines.append(Mine(100, 400 ))
+#     # mines.append(Mine(100, 375 ))
+    
+#     return mines
 # Запуск окна настроек
 settings = SettingsWindow()
 settings_result = settings.run()

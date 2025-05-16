@@ -32,8 +32,8 @@ class SettingsWindow:
             "Фланговая атака (Flank Attack)",
             "Разведчик + основной удар (Scout Discovery)",
             "Случайный шум (Random Perturbation)",
-            "Gathering (Сбор в треугольнике)",
-            "Лидер-ведомые (Спиральная колонна)"
+            "Gathering (Сбор в треугольнике)"
+            #"Лидер-ведомые (Спиральная колонна)"
             #"Emergent Behavior (Boids-like)"
         ]
         
