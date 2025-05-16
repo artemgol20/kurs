@@ -30,7 +30,7 @@ class SettingsWindow:
             "Зигзагообразное движение (Evasive Zigzag)",
             "Спиральное сближение (Spiral Approach)",
             "Фланговая атака (Flank Attack)",
-            "Разведчик + основной удар (Scout Discovery)",
+            "--",#Разведчик + основной удар (Scout Discovery)
             "Случайный шум (Random Perturbation)",
             "Gathering (Сбор в треугольнике)"
             #"Лидер-ведомые (Спиральная колонна)"
