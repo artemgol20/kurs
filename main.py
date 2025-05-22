@@ -26,7 +26,8 @@ STRATEGY_NAMES = [
     "Спиральное сближение (Spiral Approach)",
     "Фланговая атака (Flank Attack)",
     "Случайный шум (Random Perturbation)",
-    "Gathering (Сбор в треугольнике)"
+    "Gathering (Сбор в треугольнике)",
+    "Спиральный зигзаг (Spiral Zigzag)"
 ]
 
 def create_mine(spawn_type, index=0, total=1):
@@ -66,33 +67,7 @@ def create_triangle_mines():
         mines.append(Mine(x, y))
     return mines
 
-# def create_column_mines():
-#     # Создаем линию из 3 мин слева
-#     start_x = 200  # Расстояние от левого края
-#     center_y = HEIGHT // 2  # Центр экрана по вертикали
-#     spacing = 50  # Расстояние между минами
-    
-#     mines = []
-#     # Создаем три мины: одну выше центра, одну в центре и одну ниже
-#     for i in range(3):
-#         y_offset = (i - 1) * spacing  # -1, 0, 1 для трех позиций
-#         mines.append(Mine(start_x, center_y + y_offset))
-#     return mines
 
-# def create_column_mines():
-#     """
-#     Спавнит три мины в вертикальную линию слева от центра экрана.
-#     """
-#     mines = []
-#     #mines.append(Mine(-300, 425 ))
-#     mines.append(Mine(100, 400 ))
-#     mines.append(Mine(100, 400 ))
-#     mines.append(Mine(100, 400 ))
-#     #mines.append(Mine(-300, 500 ))
-#     # mines.append(Mine(100, 400 ))
-#     # mines.append(Mine(100, 375 ))
-    
-#     return mines
 # Запуск окна настроек
 settings = SettingsWindow()
 settings_result = settings.run()
@@ -196,119 +171,46 @@ class Mine:
             self.angle = base_angle
             self.speed = MINE_SPEED * 1.5  # Увеличиваем скорость для этой стратегии
             
-        elif strategy_id == 6:  # Лидер-ведомые (Спиральная колонна)
+        elif strategy_id == 6:  # Спиральный зигзаг
             self.speed = MINE_SPEED * 1.3
-            # Сдвигаем координаты так, чтобы враг был центром спирали
+
+            # Центр относительно цели
             X0 = self.x - target[0]
             Y0 = self.y - target[1]
-            
-            # При первом вызове запоминаем начальные полярные координаты
+
             if not hasattr(self, 'phi'):
                 self.phi = math.atan2(Y0, X0)
-                self.r0 = math.hypot(X0, Y0) or 1
-                # Добавляем смещение для каждой мины, чтобы они шли в колонне
-                self.phi_offset = mines.index(self) * (math.pi / 4)  # Смещение на 45 градусов
+                self.r0  = math.hypot(X0, Y0) or 1
 
-            # Параметр спирали (чем больше, тем плотнее скрутка)
+            # Параметр скрутки
             b = 0.2
-
-            # Текущее расстояние до цели
             curr_r = math.hypot(X0, Y0)
 
-            # Увеличиваем угол (скорость закрутки)
-            # Чем ближе к цели, тем больше скорость
-            speed_factor = self.r0 / (curr_r + 1)  # +1 чтобы избежать деления на 0
+            # Увеличиваем угол с поправкой на расстояние
+            speed_factor = self.r0 / (curr_r + 1)
             delta_phi = self.speed * speed_factor / self.r0
             self.phi += delta_phi
 
-            # Новое расстояние: r = r0 * exp(-b * phi)
-            r = self.r0 * math.exp(-b * (self.phi + self.phi_offset))
+            # Затухающая спираль
+            r = self.r0 * math.exp(-b * self.phi)
 
-            # Обратно в декартовы, с центром в target
-            self.x = target[0] + r * math.cos(self.phi + self.phi_offset)
-            self.y = target[1] + r * math.sin(self.phi + self.phi_offset)
-                
-        elif strategy_id == 7:  # Emergent Behavior (Boids-like)
-            # 1. Separation (разделение)
-            separation = [0, 0]
-            for other in mines:
-                if other != self and other.alive:
-                    dx = self.x - other.x
-                    dy = self.y - other.y
-                    dist = math.hypot(dx, dy)
-                    if dist < 50:  # Минимальное расстояние между минами
-                        separation[0] += dx / dist
-                        separation[1] += dy / dist
-            
-            # 2. Alignment (выравнивание)
-            alignment = [0, 0]
-            count = 0
-            for other in mines:
-                if other != self and other.alive:
-                    alignment[0] += math.cos(other.angle)
-                    alignment[1] += math.sin(other.angle)
-                    count += 1
-            if count > 0:
-                alignment[0] /= count
-                alignment[1] /= count
-            
-            # 3. Cohesion (сближение)
-            cohesion = [0, 0]
-            count = 0
-            for other in mines:
-                if other != self and other.alive:
-                    cohesion[0] += other.x
-                    cohesion[1] += other.y
-                    count += 1
-            if count > 0:
-                cohesion[0] = (cohesion[0] / count - self.x) / 100
-                cohesion[1] = (cohesion[1] / count - self.y) / 100
-            
-            # 4. Move to Target (с ограничением)
-            target_force = [dx / dist, dy / dist]
-            
-            # 5. Boundary Avoidance (избегание границ)
-            boundary_force = [0, 0]
-            margin = 50  # Увеличиваем отступ от границ
-            if self.x < margin:
-                boundary_force[0] += 2.0
-            elif self.x > WIDTH - margin:
-                boundary_force[0] -= 2.0
-            if self.y < margin:
-                boundary_force[1] += 2.0
-            elif self.y > HEIGHT - margin:
-                boundary_force[1] -= 2.0
-            
-            # Комбинируем все силы с большим весом для целевой силы
-            self.velocity[0] += (separation[0] * 0.5 + alignment[0] * 0.3 + 
-                               cohesion[0] * 0.3 + target_force[0] * 4.0 +
-                               boundary_force[0] * 3.0)
-            self.velocity[1] += (separation[1] * 0.5 + alignment[1] * 0.3 + 
-                               cohesion[1] * 0.3 + target_force[1] * 4.0 +
-                               boundary_force[1] * 3.0)
-            
-            # Ограничиваем скорость
-            speed = math.hypot(self.velocity[0], self.velocity[1])
-            if speed > 3:
-                self.velocity[0] = self.velocity[0] / speed * 3
-                self.velocity[1] = self.velocity[1] / speed * 3
-            
-            # Применяем движение
-            self.x += self.velocity[0]
-            self.y += self.velocity[1]
-            
-            # Принудительно возвращаем мины в границы экрана
-            self.x = max(margin, min(WIDTH - margin, self.x))
-            self.y = max(margin, min(HEIGHT - margin, self.y))
-            
-            self.angle = math.atan2(self.velocity[1], self.velocity[0])
+            # Поперечное отклонение (амплитуда и частота можно регулировать)
+            zigzag_amplitude = 15
+            zigzag_frequency = 0.4  # 0.4 = частота, можно подбирать
+
+            # Смещение перпендикулярно спиральной траектории
+            dx_zigzag = zigzag_amplitude * math.cos(self.tick * zigzag_frequency) * math.cos(self.phi + math.pi/2)
+            dy_zigzag = zigzag_amplitude * math.cos(self.tick * zigzag_frequency) * math.sin(self.phi + math.pi/2)
+
+            # Итоговая позиция
+            self.x = target[0] + r * math.cos(self.phi) + dx_zigzag
+            self.y = target[1] + r * math.sin(self.phi) + dy_zigzag
             return
 
-        # Применяем движение для всех стратегий кроме Boids-like
-        if strategy_id != 7:
-            if strategy_id != 5 or self == mines[0] or self.scout_discovered:
-                self.x += math.cos(self.angle) * self.speed
-                self.y += math.sin(self.angle) * self.speed
+        # Применяем движение для всех стратегий кроме спирального зигзага
+        if strategy_id != 6:
+            self.x += math.cos(self.angle) * self.speed
+            self.y += math.sin(self.angle) * self.speed
 
     def draw(self):
         color = (0, 255, 0) if self == mines[0] and strategy_id == 5 else MINE_COLOR

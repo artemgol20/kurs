@@ -31,8 +31,8 @@ class SettingsWindow:
             "Спиральное сближение (Spiral Approach)",
             "Фланговая атака (Flank Attack)",
             "Случайный шум (Random Perturbation)",
-            "Gathering (Сбор в треугольнике)"
-
+            "Gathering (Сбор в треугольнике)",
+            "Спиральный зигзаг (Spiral Zigzag)"
         ]
         
         self.spawn_types = [
