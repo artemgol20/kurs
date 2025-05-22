@@ -25,11 +25,8 @@ STRATEGY_NAMES = [
     "Зигзагообразное движение (Evasive Zigzag)",
     "Спиральное сближение (Spiral Approach)",
     "Фланговая атака (Flank Attack)",
-    "Разведчик + основной удар (Scout Discovery)",
     "Случайный шум (Random Perturbation)",
-    "Gathering (Сбор в треугольнике)",
-    "Лидер-ведомые (Спиральная колонна)",
-    "Emergent Behavior (Boids-like)"
+    "Gathering (Сбор в треугольнике)"
 ]
 
 def create_mine(spawn_type, index=0, total=1):
@@ -156,12 +153,7 @@ class Mine:
         elif strategy_id == 1:  # Зигзагообразное движение
             self.angle = base_angle + math.sin(self.tick / 10) * 1.0
         
-        # elif strategy_id == 2:  # Спиральное сближение
-        #     offset = 0.5 * math.pi * (1 - min(1, dist / 400))
-        #     self.angle = base_angle + offset + 0.05 * self.tick
-      # В классе Mine, в методе update(), замените ветку для strategy_id == 2 на следующее:
-
-        elif strategy_id == 2:
+        elif strategy_id == 2:  # Спиральное сближение
             self.speed = MINE_SPEED * 1.3
             # Сдвигаем координаты так, чтобы враг был центром спирали
             X0 = self.x - target[0]
@@ -189,63 +181,22 @@ class Mine:
             # Обратно в декартовы, с центром в target
             self.x = target[0] + r * math.cos(self.phi)
             self.y = target[1] + r * math.sin(self.phi)
-        # elif strategy_id == 2:
-        #     self.speed = MINE_SPEED * 1.1
-        #     # Сдвигаем координаты так, чтобы враг был центром спирали
-        #     X0 = self.x - target[0]
-        #     Y0 = self.y - target[1]
-
-        #     # Инициализируем при первом обновлении
-        #     if not hasattr(self, 'phi'):
-        #         self.phi = math.atan2(Y0, X0)
-        #         self.r0  = math.hypot(X0, Y0) or 1
-
-        #     # Параметр спирали
-        #     b = 0.3
-
-        #     # Расстояние до центра в текущий момент
-        #     r = math.hypot(self.x - target[0], self.y - target[1]) or 1
-
-        #     # Пропорциональное изменение скорости:
-        #     # чем меньше r, тем больше множитель (мина ускоряется при приближении)
-        #     speed_factor = 1 + (self.r0 - r) / self.r0
-        #     curr_speed = self.speed * speed_factor
-
-        #     # Инкремент угла закрутки
-        #     delta_phi = curr_speed / self.r0
-        #     self.phi += delta_phi
-
-        #     # Новое расстояние по спирали
-        #     new_r = self.r0 * math.exp(-b * self.phi)
-
-        #     # Обратно в декартовы, с учётом центра
-        #     self.x = target[0] + new_r * math.cos(self.phi)
-        #     self.y = target[1] + new_r * math.sin(self.phi)
             
-
         elif strategy_id == 3:  # Фланговая атака
             if self.x < target[0]:
                 self.angle = base_angle + math.pi / 4
             else:
                 self.angle = base_angle - math.pi / 4
         
-        elif strategy_id == 4:  # Разведчик + основной удар
-            if mines[0] == self:  # Если это разведчик
-                self.angle = base_angle
-                if dist < MINE_DETECT_RADIUS * 2:
-                    self.scout_discovered = True
-            elif self.scout_discovered:  # Если разведчик обнаружил цель
-                self.angle = base_angle
-        
-        elif strategy_id == 5:  # Случайный шум
+        elif strategy_id == 4:  # Случайный шум
             self.angle = base_angle + random.uniform(-1.0, 1.0)
             
-        elif strategy_id == 6:  # Gathering (Сбор в треугольнике)
+        elif strategy_id == 5:  # Gathering (Сбор в треугольнике)
             # Просто движемся к цели с увеличенной скоростью
             self.angle = base_angle
             self.speed = MINE_SPEED * 1.5  # Увеличиваем скорость для этой стратегии
             
-        elif strategy_id == 7:  # Лидер-ведомые (Спиральная колонна)
+        elif strategy_id == 6:  # Лидер-ведомые (Спиральная колонна)
             self.speed = MINE_SPEED * 1.3
             # Сдвигаем координаты так, чтобы враг был центром спирали
             X0 = self.x - target[0]
@@ -277,7 +228,7 @@ class Mine:
             self.x = target[0] + r * math.cos(self.phi + self.phi_offset)
             self.y = target[1] + r * math.sin(self.phi + self.phi_offset)
                 
-        elif strategy_id == 8:  # Emergent Behavior (Boids-like)
+        elif strategy_id == 7:  # Emergent Behavior (Boids-like)
             # 1. Separation (разделение)
             separation = [0, 0]
             for other in mines:
@@ -354,13 +305,13 @@ class Mine:
             return
 
         # Применяем движение для всех стратегий кроме Boids-like
-        if strategy_id != 8:
-            if strategy_id != 4 or self == mines[0] or self.scout_discovered:
+        if strategy_id != 7:
+            if strategy_id != 5 or self == mines[0] or self.scout_discovered:
                 self.x += math.cos(self.angle) * self.speed
                 self.y += math.sin(self.angle) * self.speed
 
     def draw(self):
-        color = (0, 255, 0) if self == mines[0] and strategy_id == 4 else MINE_COLOR
+        color = (0, 255, 0) if self == mines[0] and strategy_id == 5 else MINE_COLOR
         pygame.draw.circle(window, color, (int(self.x), int(self.y)), MINE_RADIUS)
         pygame.draw.circle(window, (0, 150, 255), (int(self.x), int(self.y)), MINE_DETECT_RADIUS, 1)
 
@@ -388,10 +339,8 @@ class Enemy:
         pygame.draw.circle(window, (255, 50, 50), (self.x, self.y), ENEMY_DETECT_RADIUS, 1)
 
 # Создаем мины
-if strategy_id == 6:  # Gathering
+if strategy_id == 5:  # Gathering
     mines = create_triangle_mines()
-elif strategy_id == 7:  # Лидер-ведомые
-    mines = create_column_mines()
 else:
     mines = [create_mine(spawn_type) for _ in range(num_mines)]
 enemy = Enemy()
