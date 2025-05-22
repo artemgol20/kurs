@@ -17,7 +17,7 @@ class SettingsWindow:
         self.num_mines = 10
         self.strategy_id = 0
         self.spawn_type = 0
-        self.input_active = False
+        self.input_active = False 
         self.input_text = "10"
         
         # Настройки скроллбара
@@ -91,13 +91,9 @@ class SettingsWindow:
         
         # Поле ввода
         input_rect = pygame.Rect(200, 95, 100, 30)
-        if self.strategy_id in [6, 7]:  # Gathering или Лидер-ведомые
+        if self.strategy_id == 5:  # Gathering
             pygame.draw.rect(self.window, (60, 60, 60), input_rect, 2)
             text_surface = self.input_font.render("3", True, (150, 150, 150))
-            self.window.blit(text_surface, (input_rect.x + 5, input_rect.y + 2))
-        elif self.strategy_id == 8:  # Emergent Behavior
-            pygame.draw.rect(self.window, (60, 60, 60), input_rect, 2)
-            text_surface = self.input_font.render("5", True, (150, 150, 150))
             self.window.blit(text_surface, (input_rect.x + 5, input_rect.y + 2))
         else:
             pygame.draw.rect(self.window, (255, 255, 255) if self.input_active else (100, 100, 100), input_rect, 2)
@@ -105,14 +101,8 @@ class SettingsWindow:
             self.window.blit(text_surface, (input_rect.x + 5, input_rect.y + 2))
         
         # Предупреждения для специальных стратегий
-        if self.strategy_id == 6:
+        if self.strategy_id == 5:  # Gathering
             warning = self.font.render("Для этой стратегии используется 3 мины в треугольнике", True, (255, 100, 100))
-            self.window.blit(warning, (20, 130))
-        elif self.strategy_id == 7:
-            warning = self.font.render("Для этой стратегии используется 3 мины в колонне слева", True, (255, 100, 100))
-            self.window.blit(warning, (20, 130))
-        elif self.strategy_id == 8:
-            warning = self.font.render("Для этой стратегии используется 5 мин", True, (255, 100, 100))
             self.window.blit(warning, (20, 130))
         
         # Стратегия
@@ -156,13 +146,8 @@ class SettingsWindow:
 
     def start_simulation(self):
         try:
-            if self.strategy_id in [6, 7]:  # Gathering или Лидер-ведомые
+            if self.strategy_id == 5:  # Gathering
                 self.num_mines = 3
-                if self.strategy_id == 7:  # Для Лидер-ведомые фиксируем спавн слева
-                    self.spawn_type = 1
-                self.settings_complete = True
-            elif self.strategy_id == 8:  # Emergent Behavior
-                self.num_mines = 5
                 self.settings_complete = True
             else:
                 num = int(self.input_text)
@@ -180,7 +165,7 @@ class SettingsWindow:
                     return None
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     # Проверяем клик по полю ввода только если не Gathering
-                    if self.strategy_id not in [6, 7, 8]:
+                    if self.strategy_id != 5:
                         input_rect = pygame.Rect(200, 95, 100, 30)
                         if input_rect.collidepoint(event.pos):
                             self.input_active = True
@@ -195,7 +180,7 @@ class SettingsWindow:
                     elif event.button == 5:  # Скролл вниз
                         self.scroll_y = min(self.max_scroll, self.scroll_y + self.scroll_speed)
                         
-                elif event.type == pygame.KEYDOWN and self.input_active and self.strategy_id not in [6, 7, 8]:
+                elif event.type == pygame.KEYDOWN and self.input_active and self.strategy_id != 5:
                     if event.key == pygame.K_RETURN:
                         self.input_active = False
                     elif event.key == pygame.K_BACKSPACE:

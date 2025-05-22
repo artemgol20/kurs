@@ -172,7 +172,7 @@ class Mine:
             self.speed = MINE_SPEED * 1.5  # Увеличиваем скорость для этой стратегии
             
         elif strategy_id == 6:  # Спиральный зигзаг
-            self.speed = MINE_SPEED * 1.3
+            self.speed = MINE_SPEED * 1.0
 
             # Центр относительно цели
             X0 = self.x - target[0]
@@ -195,8 +195,8 @@ class Mine:
             r = self.r0 * math.exp(-b * self.phi)
 
             # Поперечное отклонение (амплитуда и частота можно регулировать)
-            zigzag_amplitude = 15
-            zigzag_frequency = 0.4  # 0.4 = частота, можно подбирать
+            zigzag_amplitude = 20
+            zigzag_frequency = 0.2  # 0.4 = частота, можно подбирать
 
             # Смещение перпендикулярно спиральной траектории
             dx_zigzag = zigzag_amplitude * math.cos(self.tick * zigzag_frequency) * math.cos(self.phi + math.pi/2)
