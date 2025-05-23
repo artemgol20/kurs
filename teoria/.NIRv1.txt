@@ -1,0 +1,921 @@
+\documentclass[bachelor, och, pract]{SCWorks}
+% параметр - тип обучения - одно из значений:
+%    spec     - специальность
+%    bachelor - бакалавриат (по умолчанию)
+%    master   - магистратура
+% параметр - форма обучения - одно из значений:
+%    och   - очное (по умолчанию)
+%    zaoch - заочное
+% параметр - тип работы - одно из значений:
+%    referat    - реферат
+%    coursework - курсовая работа (по умолчанию)
+%    diploma    - дипломная работа
+%    pract      - отчет по практике
+%    pract      - отчет о научно-исследовательской работе
+%    autoref    - автореферат выпускной работы
+%    assignment - задание на выпускную квалификационную работу
+%    review     - отзыв руководителя
+%    critique   - рецензия на выпускную работу
+% параметр - включение шрифта
+%    times    - включение шрифта Times New Roman (если установлен)
+%               по умолчанию выключен
+\usepackage[T2A]{fontenc}
+\usepackage[cp1251]{inputenc}
+\usepackage{graphicx}
+\usepackage[final]{pdfpages}
+
+\usepackage[sort,compress]{cite}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{fancyvrb}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage[english,russian]{babel}
+\usepackage{caption}
+\captionsetup[figure]{font= normalsize, labelfont=normalsize}
+
+
+\usepackage[colorlinks=true]{hyperref}
+
+\usepackage{caption}
+\captionsetup[figure]{font= normalsize, labelfont=normalsize}
+\usepackage{listings}
+
+\lstset{
+	language=Python,
+	basicstyle=\ttfamily\small, % Уменьшаем шрифт
+	keywordstyle=\bfseries,
+	tabsize=2,
+	breaklines=true, % Включаем автоматический перенос строк
+	breakatwhitespace=true, % Разрешаем переносить строки по пробелам
+	columns=fullflexible % Улучшаем адаптацию ширины кода
+}
+
+
+\begin{document}
+	
+	% Кафедра (в родительном падеже)
+	\chair{дискретной математики и информационных технологий}
+	
+	% Тема работы
+	\title{Отношение порядка и упорядоченные множества}
+	
+	% Курс
+	\course{3}
+	
+	% Группа
+	\group{321}
+	
+	% Факультет (в родительном падеже) (по умолчанию "факультета КНиИТ")
+	%\department{факультета КНиИТ}
+	
+	% Специальность/направление код - наименование
+	%\napravlenie{02.03.02 "--- Фундаментальная информатика и информационные технологии}
+	%\napravlenie{02.03.01 "--- Математическое обеспечение и администрирование информационных систем}
+	\napravlenie{09.03.01 "--- Информатика и вычислительная техника}
+	%\napravlenie{09.03.04 "--- Программная инженерия}
+	%\napravlenie{10.05.01 "--- Компьютерная безопасность}
+	
+	% Для студентки. Для работы студента следующая команда не нужна.
+	%\studenttitle{студентки}
+	
+	% Фамилия, имя, отчество в родительном падеже
+	\author{Голубкова Артема Анатольевича}
+	
+	% Заведующий кафедрой
+	\chtitle{доцент, к.\,ф.-м.\,н.} % степень, звание
+	\chname{Л.\,Б.\,Тяпаев}
+	
+	%Научный руководитель (для реферата преподаватель проверяющий работу)
+	\satitle{Профессор} %должность, степень, звание
+	\saname{В.\,А.\,Молчанов}
+	
+	
+	% Семестр (только для практики, для остальных
+	% типов работ не используется)
+	\term{5}
+	
+	% Наименование практики (только для практики, для остальных
+	% типов работ не используется)
+	\practtype{учебная}
+	
+	% Продолжительность практики (количество недель) (только для практики,
+	% для остальных типов работ не используется)
+	\duration{18}
+	
+	% Даты начала и окончания практики (только для практики, для остальных
+	% типов работ не используется)
+	\practStart{01.09.2024}
+	\practFinish{31.12.2024}
+	
+	% Год выполнения отчета
+	\date{2024}
+	
+	\maketitle
+	
+	
+	% Включение нумерации рисунков, формул и таблиц по разделам
+	% (по умолчанию - нумерация сквозная)
+	% (допускается оба вида нумерации)
+	%\secNumbering
+	
+	
+	\tableofcontents
+	
+	
+	% Раздел "Обозначения и сокращения". Может отсутствовать в работе
+	
+	% Раздел "Определения". Может отсутствовать в работе
+	%\definitions
+	
+	% Раздел "Определения, обозначения и сокращения". Может отсутствовать в работе.
+	% Если присутствует, то заменяет собой разделы "Обозначения и сокращения" и "Определения"
+	%\defabbr
+	
+	
+	% Раздел "Введение"
+	\intro
+	{\bf Цель работы}: изучение основных свойств отношений порядка.
+	
+	\textbf{Определение.} Бинарное отношение $\omega$ на множестве $A$ называется 
+	\textbf{отношением порядка}, если оно рефлексивно, антисимметрично и транзитивно.
+	
+	Для обозначения порядка используется символ $\leq$: запись $a \leq b$ заменяет $(a, b) \in \omega$.
+	Запись $a < b$ означает, что $a \leq b$ и $a \neq b$, а запись $a <\cdot b$ указывает, что $a \leq b$ и нет $x$ с $a < x < b$.
+	В этом случае $b$ называют покрывающим $a$.
+	
+	Элементы $a, b \in A$ 
+	\textit{сравнимы}, если $a \leq b$ или $b \leq a$, и 
+	\textit{несравнимы} в противном случае.
+	
+	Множество $A$ с порядком $\leq$ называется 
+	\textbf{упорядоченным множеством} и обозначается $(A,\leq)$.
+	
+	\textbf{Определение.} Элемент $a$ упорядоченного множества $(A,\leq)$ называется:
+	\begin{itemize}
+		\item наименьшим, если $\forall x \in A, \ a \leq x$;
+		\item наибольшим, если $\forall x \in A, \ x \leq a$;
+		\item минимальным, если нет $x \in A$, для которого $x < a$;
+		\item максимальным, если нет $x \in A$, для которого $x > a$.
+	\end{itemize}
+	Наименьший и наибольший элементы обозначаются как $0$ и $1$ соответственно.
+	
+	\textbf{Лемма.} Для конечного упорядоченного множества $(A,\leq)$:
+	\begin{enumerate}
+		\item каждый элемент содержится в некотором максимальном элементе и содержит некоторый минимальный элемент;
+		\item если $A$ имеет единственный максимальный (или минимальный) элемент, то он является наибольшим (или наименьшим).
+	\end{enumerate}
+	
+	\textbf{Предложение.} В конечном упорядоченном множестве $(A,\leq)$ с матрицей $M$:
+	\begin{enumerate}
+		\item $a$ наименьший $\Leftrightarrow$ строка $a$ в $M$ состоит из 1;
+		\item $a$ наибольший $\Leftrightarrow$ столбец $a$ в $M$ состоит из 1;
+		\item $a$ минимальный $\Leftrightarrow$ в столбце $a$ в $M$ 1 только на главной диагонали;
+		\item $a$ максимальный $\Leftrightarrow$ в строке $a$ в $M$ 1 только на главной диагонали.
+	\end{enumerate}
+	
+	
+	
+	\section{Упорядочивание множества слов}
+	
+	\subsection{Определение множества слов и множества целых чисел}
+	Пусть $A$ – произвольное конечное множество, называемое алфавитом. Элементы $a \in A$ называются буквами. Словом над алфавитом $A$ называется конечная последовательность букв $a_1 \dots a_n$ алфавита $A$. Слово без букв называется \textit{пустым словом} и обозначается символом $\Lambda$. Длина слова $w = a_1 \dots a_n$ обозначается символом $|w|$.
+	
+	Обозначим:
+	\begin{itemize}
+		\item $A_n$ – множество всех слов над алфавитом $A$ длины $n$;
+		\item $A^*$ – множество всех слов (включая пустые) над алфавитом $A$;
+		\item $A^+$ – множество всех непустых слов над алфавитом $A$.
+	\end{itemize}
+	
+	\textbf{Предложение 1}. Если множество $A$ \textit{линейно упорядочено} отношением порядка $\leq$, то на множестве слов $A_n$ можно определить следующие отношения порядка:
+	
+	\begin{enumerate}
+		\item \textit{Побуквенное сравнение слов}: для $w_1 = a_1 \dots a_n$ и $w_2 = b_1 \dots b_n$
+		\begin{equation*}
+			w_1 \leq_n w_2 \Leftrightarrow (\forall 1 \leq i \leq n) a_i \leq b_i.
+		\end{equation*}
+		\item \textit{Лексикографический порядок}: для $w_1 = a_1 \dots a_n$ и $w_2 = b_1 \dots b_n$
+		\begin{equation*}
+			w_1 \leq_{lex} w_2 \Leftrightarrow w_1 = w_2 \lor ((\exists k)(\forall 1 \leq i < k) a_i = b_i \land a_k < b_k).
+		\end{equation*}
+	\end{enumerate}
+	
+	Очевидно, что $\leq_{lex}$ является линейным порядком, а $\leq_n$ – решеточным порядком.
+	
+	\textbf{Предложение 2}. Если множество $A$ \textit{линейно упорядочено} отношением порядка $\leq$, то на множестве слов $A^*$ можно определить следующие линейные порядки:
+	
+	\begin{enumerate}
+		\item \textit{Лексикографический порядок для произвольных слов}: для $w_1 = a_1 \dots a_n$ и $w_2 = b_1 \dots b_m$
+		\begin{equation*}
+			w_1 \leq_n w_2 \Leftrightarrow (\forall 1 \leq i \leq n) a_i \leq b_i,
+		\end{equation*}
+		при условии, что к алфавиту $A$ добавлен пустой символ в качестве наименьшего элемента.
+		
+		\item \textit{Краткий лексикографический порядок}: для $w_1, w_2 \in A^*$
+		\begin{equation*}
+			w_1 \leq^* w_2 \Leftrightarrow |w_1| < |w_2| \lor (|w_1| = |w_2| \land w_1 \leq_{lex} w_2).
+		\end{equation*}
+	\end{enumerate}
+	
+	\newpage
+	\subsection{Алгоритм упорядочивания множеств слов и целых чисел} 
+	\bigskip
+	\begin{flushleft}
+		\textbf{Средняя сложность}: $O(n \log n)$. \\
+		\textbf{Худшая сложность}: $O(n^2)$. 
+	\end{flushleft}
+	
+	\begin{enumerate}
+		\item \textbf{Представление порядка в виде матрицы}: заданный порядок представлен матрицей смежности $M$, где $M[i][j] = 1$, если элемент $i$ должен предшествовать элементу $j$, и $M[i][j] = 0$ в противном случае.
+		
+		\item \textbf{Топологическая сортировка}: используется для упорядочивания элементов множества. Топологическая сортировка применима только для ациклических графов. Если граф содержит циклы, порядок не может быть установлен.
+		
+		\item \textbf{Сортировка множества целых чисел}: применяется стандартный алгоритм сортировки (например, быстрая сортировка или сортировка слиянием) для упорядочивания множества чисел по возрастанию.
+		
+		\item \textbf{Объединение результатов}: объединение результатов топологической сортировки и сортировки чисел для получения окончательного упорядоченного списка.
+	\end{enumerate}
+	
+	\textbf{Псевдокод}
+	\begin{lstlisting}
+		def sorter(array):
+			sorted_array = sorted(array)
+			n = len(sorted_array)
+			M = [[0] * n for _ in range(n)]
+			
+			for i in range(n):
+				for j in range(n):
+					if i == j or sorted_array[i] < sorted_array[j]:
+						M[i][j] = 1
+		
+			return sorted_array, M
+	\end{lstlisting}
+	Реализация алгоритма на \textbf{Python} приведена в \textbf{Приложении A}.
+	
+	\newpage
+	\subsection{Алгоритмы вычисления минимальных (максимальных) и наименьших (наибольших) элементов}
+	\bigskip
+	\begin{flushleft}
+		\textbf{Средняя сложность}: $O(n \log n)$.  \\
+		\textbf{Худшая сложность}: $O(n^2)$.
+	\end{flushleft}
+		
+	\textbf{Псевдокод}
+	
+	\begin{lstlisting}
+		def extract_extreme_values(data):
+			sorted_data, relation_matrix = sorter(data)
+			minimal_values = []
+			maximal_values = []
+			least_values = []
+			greatest_values = []
+			
+			size = len(sorted_data)
+			
+			for index in range(size):
+				# Поиск минимальных значений: элемент не превышает никого, кроме себя
+				if sum(relation_matrix[row][index] for row in range(size)) == 1:
+					minimal_values.append(sorted_data[index])
+				
+				# Поиск максимальных значений: элемент не меньше никого, кроме себя
+				if sum(relation_matrix[index][col] for col in range(size)) == 1:
+					maximal_values.append(sorted_data[index])
+				
+				# Поиск наименьших значений: элемент меньше либо равен всем остальным
+				if all(relation_matrix[index][col] == 1 for col in range(size)):
+					least_values.append(sorted_data[index])
+				
+				# Поиск наибольших значений: элемент больше либо равен всем остальным
+				if all(relation_matrix[row][index] == 1 for row in range(size)):
+					greatest_values.append(sorted_data[index])
+			
+			return sorted_data, relation_matrix, minimal_values, maximal_values, least_values, greatest_values
+		
+	\end{lstlisting}
+	
+	Реализация алгоритма на \textbf{Python} приведена в \textbf{Приложении Б}.
+	
+	
+	
+	
+	\section{Диаграмма Хассе}
+	\subsection{Алгоритм построения диаграммы Хассе}
+	
+	Упорядоченное множество $A=(A,\leq)$ наглядно представляется
+	\textit{диаграммой Хассе}, которая изображает элементы множества $A$ точками плоскости, а пары $a<\cdot b$ --- линиями, идущими вверх от элемента $a$ к элементу $b$.
+	
+	\textbf{Алгоритм построения диаграммы Хассе} конечного упорядоченного множества $A=(A,\leq)$:
+	
+	\begin{enumerate}
+		\item Найти множество $A_1$ всех минимальных элементов и расположить их в один горизонтальный ряд (первый уровень диаграммы).
+		\item В множестве $A \setminus A_1$ найти множество $A_2$ всех минимальных элементов и расположить их выше первого уровня, соединяя отрезками с элементами предыдущего уровня.
+		\item Аналогично, для множества $A \setminus (A_1 \cup A_2)$ определить $A_3$ и продолжать процесс, пока не будут учтены все элементы множества $A$.
+		\item Процесс продолжается до тех пор, пока не выберутся все элементы множества $A$.
+	\end{enumerate}
+	
+	\textbf{Определение}. Подмножество $X$ упорядоченного множества $(A,\leq)$ называется:
+	\begin{itemize}
+		\item \textit{Ограниченным сверху}, если существует $a \in A$ такое, что $x\leq a$ для всех $x \in X$. Наименьшая верхняя грань обозначается $\sup X$, а если $\sup X \in X$, то это наибольший элемент $\max X$.
+		\item \textit{Ограниченным снизу}, если существует $a \in A$ такое, что $a\leq x$ для всех $x \in X$. Наибольшая нижняя грань обозначается $\inf X$, а если $\inf X \in X$, то это наименьший элемент $\min X$.
+	\end{itemize}
+	
+	Если $(A,\leq)$ ограничено сверху (или снизу), то его верхняя (или нижняя) грань обозначается соответственно $1$ (или $0$).
+	
+	\textbf{Определение}. Порядок $\leq$ на множестве $A$ называется:
+	\begin{itemize}
+		\item \textit{Линейным}, если любые два элемента сравнимы: $(\forall a,b \in A)(a \leq b \lor b \leq a)$.
+		\item \textit{Полным}, если любое непустое подмножество имеет точную верхнюю и нижнюю грани.
+		\item \textit{Решеточным}, если для любых $a,b \in A$ существуют $\sup \{a,b\}$ и $\inf \{a,b\}$, обозначаемые как $a \lor b$ и $a\land b$.
+	\end{itemize}
+	
+	\subsection{Реализация алгоритма построения диаграммы Хассе}
+	\textbf{Сложность алгоритма}:
+	\begin{enumerate}
+		\item \textbf{Создание графа}:
+		\begin{enumerate}
+			\item Добавление вершин: $O(n)$.
+			\item Добавление рёбер: $O(n^2)$.
+		\end{enumerate}
+		\item \textbf{Удаление транзитивных рёбер}: $O(n^3)$.
+		\item \textbf{Визуализация графа}:
+		\begin{enumerate}
+			\item Размещение вершин: $O(n^2)$.
+			\item Рисование графа: $O(n+m)$, где $m$ --- количество рёбер.
+		\end{enumerate}
+	\end{enumerate}
+	
+	\textbf{Итоговая сложность}: $O(n^3)$.
+	
+	\textbf{Алгоритм реализации диаграммы Хассе}:
+	\begin{enumerate}
+		\item Построение матрицы отношения порядка.
+		\item Удаление транзитивных рёбер.
+		\item Построение графа.
+		\item Размещение вершин для лучшей читаемости.
+	\end{enumerate}
+	
+	\textbf{Псевдокод}:
+	\begin{lstlisting}
+		function construct_hasse_graph(order_relation):
+			graph = new DirectedGraph()
+			
+			# Добавляем вершины в граф
+			for node in range(len(order_relation)):
+				graph.add_node(node)
+			
+			# Добавляем ребра, соответствующие отношению порядка
+			for source in range(len(order_relation)):
+				for target in range(len(order_relation)):
+					if order_relation[source][target] == 1:
+						graph.add_edge(source, target)
+			
+			# Удаляем транзитивные ребра
+			for source in range(len(order_relation)):
+				for middle in range(len(order_relation)):
+					if order_relation[source][middle] == 1:
+						for target in range(len(order_relation)):
+							if order_relation[middle][target] == 1 and order_relation[source][target] == 1:
+								graph.remove_edge(source, target)
+			
+		# Отображение графа
+		layout = spring_layout(graph)
+		draw(graph, layout, with_labels=True, arrows=False)
+		
+		# Пример отношения порядка
+		order_matrix = [
+		[1, 0, 0, 1],
+		[0, 1, 1, 0],
+		[1, 0, 1, 0],
+		[0, 1, 1, 0]
+		]
+		
+		construct_hasse_graph(order_matrix)
+	\end{lstlisting}
+	
+	Реализация алгоритма на \textbf{Python} приведена в \textbf{Приложении В}.
+	
+	\newpage
+	
+	\section{Решетка концептов}
+	
+\subsection{Системы замыкания и операторы замыкания}
+
+\textbf{Определение}. Подмножество $Z \subset P(A)$ множества всех подмножеств множества $A$ называется \textit{системой замыканий}, если оно замкнуто относительно операции пересечения:
+\[
+\bigcap B \in Z, \quad \forall B \subset Z.
+\]
+
+В частности, поскольку $\varnothing \subset Z$, имеем $\bigcap \varnothing = A \in Z$.
+
+Элементы множества $Z$ называют \textit{замкнутыми подмножествами} множества $A$.
+
+\textbf{Определение}. \textit{Оператор замыкания} на множестве $A$ — это отображение $f: P(A) \to P(A)$, удовлетворяющее следующим условиям:
+
+\begin{enumerate}
+	\item Монотонность: если $X \subset Y$, то $f(X) \subset f(Y)$;
+	\item Интенсивность: любое множество включено в своё замыкание, то есть $X \subset f(X)$;
+	\item Идемпотентность: повторное применение оператора не изменяет результат, то есть $f(f(X)) = f(X)$.
+\end{enumerate}
+
+Для любого множества $X \subset A$ значение $f(X)$ называется его \textit{замыканием}.
+
+\textbf{Теорема}. Каждой системе замыканий $Z$ на множестве $A$ соответствует оператор замыкания $f_Z$, определяемый следующим образом:
+\[
+f_Z(X) = \bigcap \{B \in Z \mid X \subset B\}.
+\]
+
+Обратно, любой оператор замыкания $f$ задаёт на множестве $A$ систему замыканий $Z_f$:
+\[
+Z_f = \{X \subset A \mid f(X) = X\}.
+\]
+
+Это соответствие является взаимно однозначным.
+
+	\newpage
+	\subsection{Определения контекста и концепта}
+	
+	Бинарное отношение $p \subset G \times M$ можно рассматривать как базу данных, где $G$ — множество объектов, $M$ — множество атрибутов. Такая система называется контекстом.
+	
+	\textbf{Определение}. \textit{Контекстом} называется алгебраическая система $K = (G, M, p)$, где $p \subset G \times M$ определяет, имеет ли объект $g \in G$ атрибут $m \in M$.
+	
+	Контекст $K$ представляется таблицей, где строки соответствуют объектам, столбцы — атрибутам, а пересечения определяются по правилу:
+	\[
+	k_{g,m} =
+	\begin{cases}
+		1, & (g,m) \in p, \\
+		0, & (g,m) \notin p.
+	\end{cases}
+	\]
+	
+	\textbf{Определение}. Упорядоченная пара $(X,Y)$ замкнутых подмножеств $G$ и $M$ (где $X \in Z_{f_G}$, $Y \in Z_{f_M}$), удовлетворяющая условиям $\varphi(X)=Y, \psi(Y)=X$, называется \textit{концептом} контекста $K$.
+	
+	Множество всех концептов $C(K)$ упорядочено отношением:
+	\[ (X,Y) \leq (X_1,Y_1) \Leftrightarrow X \subset X_1 \quad (Y_1 \subset Y), \]
+	что делает $(C(K),\leq)$ полной решеткой, изоморфной решетке замкнутых подмножеств $G$.
+	
+	В частности, по определению для $g \in G, m \in M$ получаем
+	
+	$\varphi(\{g\})=\{m\in M | (x,m)\in p$ для всех объектов $x\in \{g\}\} = p(g)$
+	
+	$\psi(\{m\})=\{g\in G | (g,y)\in p$ для всех атрибутов $y\in \{m\}\} = p^{-1}(m)$
+	
+	Тогда для $X \subset G, Y \subset M$ получаем
+	
+	\[\varphi(X)=\displaystyle\bigcap_{g\in X} \varphi(\{g\}) = \displaystyle\bigcap_{g\in X} p(g),  \psi(Y)=\displaystyle\bigcap_{m\in Y} \psi(\{m\}) = \displaystyle\bigcap_{m\in Y} p^{-1}(m),\]
+	\[f_G(X)=X''=\psi(\varphi(X))= \displaystyle\bigcap_{m\in \varphi(X)} \psi(\{m\}) = \displaystyle\bigcap_{m\in \varphi(X)} p^{-1}(m),\]
+	\[f_M(Y)=Y''=\varphi(\psi(Y))=\displaystyle\bigcap_{g\in \psi(Y)} \varphi(\{g\}) = \displaystyle\bigcap_{g\in \psi(Y)} p(g).\]
+	\subsection{Алгоритм построения решетки концептов}
+	
+	\begin{enumerate}
+		\item Создать таблицу инцидентности (объекты — строки, атрибуты — столбцы, значения — 0 или 1).
+		\item Найти все формальные концепты $(A, B)$, где $A \subset Z_{f_G}, B \subset Z_{f_M}$ и $\varphi(A)=B, \psi(B)=A$.
+		\item Построить решетку концептов: узлы — концепты, связи — отношение подконцепта.
+		\item Упростить решетку: удалить избыточные связи.
+	\end{enumerate}
+	
+	\textbf{Сложность алгоритма}:
+	\begin{itemize}
+		\item Построение таблицы: $O(n \times m)$.
+		\item Перебор всех концептов: $O(2^n \times 2^m)$ (экспоненциальная сложность).
+		\item Построение решетки: зависит от числа концептов.
+	\end{itemize}
+	
+	\textbf{Псевдокод вычисления решетки концептов}:
+	
+	\begin{lstlisting}
+	function extract_concepts(context):
+		concepts = []
+		for mask in range(1, 2**len(context)):
+			A = [i for i in range(len(context)) if mask & (1 << i)]
+			B = [j for j in range(len(context[0])) if all(context[i][j] for i in A)]
+			if A == [i for i in range(len(context)) if all(context[i][j] for j in B)]:
+				concepts.append((A, B))
+		return concepts		
+	function construct_lattice(concepts):
+		G = new DirectedGraph()
+		for i, (A, B) in enumerate(concepts):
+			G.add_node(i, label=f"({A}, {B})")
+		for i, (A1, B1) in enumerate(concepts):
+			for j, (A2, B2) in enumerate(concepts):
+				if set(A1) <= set(A2) and set(B2) <= set(B1):
+					G.add_edge(i, j)
+		return G
+	function draw_lattice(G):
+		draw(G, spring_layout(G), with_labels=True, labels=get_node_attributes(G, 'label'), arrows=False)
+	
+	context = [[1, 0, 1], [0, 1, 1], [1, 1, 0]]
+	draw_lattice(construct_lattice(extract_concepts(context)))
+	
+	
+		
+	\end{lstlisting}
+	
+	Реализация алгоритма на \textbf{Python} представлена в \textbf{Приложении Г}.
+	
+	
+	
+	\section{Задания (Вариант №1)}
+	\subsection{Задание №1}
+	
+	Рассматривается множество целых чисел $M$ с отношением делимости.
+	Построить граф, матрицу и диаграмму Хассе этого упорядоченного множества. Найти минимальные (максимальные) и наименьшие (наибольшие) элементы этого упорядоченного множества.
+	
+	$M = \{3,7,21,33,35,63\}$
+	
+	{\bf Решение:}
+	\begin{lstlisting}[numbers=left]
+		import numpy as np
+		import networkx as nx
+		import matplotlib.pyplot as plt
+		
+		M = [3,7,21,33,35,63]
+		n = len(M)
+		
+		div_matrix = np.zeros((n, n), dtype=int)
+		for i in range(n):
+			for j in range(n):
+				if M[j] % M[i] == 0:
+					div_matrix[i][j] = 1
+		
+		print("Матрица отношений делимости:")
+		print(div_matrix)
+		
+		min_elements = [M[i] for i in range(n) if all(div_matrix[j][i] == 0 for j in range(n) if i != j)]
+		max_elements = [M[i] for i in range(n) if all(div_matrix[i][j] == 0 for j in range(n) if i != j)]
+		
+		print(f"Минимальные элементы: {min_elements}")
+		print(f"Максимальные элементы: {max_elements}")
+		
+		G = nx.DiGraph()
+		for number in M:
+			G.add_node(number)
+		for i in range(n):
+			for j in range(n):
+				if div_matrix[i][j] == 1 and i != j:
+					G.add_edge(M[i], M[j])
+		
+		plt.figure(figsize=(8, 6))
+		pos = nx.spring_layout(G)
+		nx.draw(G, pos, with_labels=True, node_size=2000, node_color='lightblue', font_size=15, font_weight='bold', arrows=True)
+		plt.title("Граф делимости")
+		plt.show()
+		
+		def hasse_diagram(M):
+			G_hasse = nx.DiGraph()
+			for i in range(n):
+				for j in range(n):
+					if div_matrix[i][j] == 1 and i != j:
+						if not any(div_matrix[i][k] == 1 and div_matrix[k][j] == 1 for k in range(n) if k != i and k != j):
+							G_hasse.add_edge(M[i], M[j])
+			return G_hasse
+			
+		H = hasse_diagram(M)
+		
+		plt.figure(figsize=(8, 6))
+		pos_hasse = nx.spring_layout(H)
+		nx.draw(H, pos_hasse, with_labels=True, node_size=2000, node_color='lightblue', font_size=15, font_weight='bold', arrows=True)
+		plt.title("Диаграмма Хассе")
+		plt.show()
+	\end{lstlisting}
+	
+	\begin{figure}[!ht]
+		\centering
+		\includegraphics[width=9cm]{pr1_1.png}
+		\caption{\label{fig:a}%
+			Ответ на задание 1}
+	\end{figure}
+	\begin{figure}[!ht]
+		\centering
+		\includegraphics[width=8.5cm]{pr1_2.png}
+		\caption{\label{fig:a}%
+			Диаграмма Хассе задания 1}
+	\end{figure}
+	
+	\newpage
+	\subsection{Задание №2}
+	
+	Рассматривается множество слов $W$ над алфавитом $A = \{a,b,c\}$, упорядоченным отношением $a<b<c$. Построить граф, матрицу и диаграмму Хассе множества $W$, элементы которого упорядочены а) побуквенно, б) лексикографически.
+	
+	$W = \{baa,aba,abb,bba,bbb\}$
+	
+	\begin{lstlisting}[numbers=left]
+		import numpy as np
+		import networkx as nx
+		import matplotlib.pyplot as plt
+		
+		W = ["baa", "aba", "abb", "bba", "bbb"]
+		n = len(W)
+		
+		def compare_letterwise(word1, word2):
+			return all(a <= b for a, b in zip(word1, word2))
+		
+		def compare_lexicographically(word1, word2):
+			return word1 <= word2
+		
+		def build_relation_matrix(W, compare_func):
+			matrix = np.zeros((n, n), dtype=int)
+			for i in range(n):
+				for j in range(n):
+					if compare_func(W[i], W[j]):
+						matrix[i][j] = 1
+			return matrix
+		
+		def draw_graph(matrix, W, title, color="lightblue"):
+			G = nx.DiGraph()
+			for word in W:
+				G.add_node(word)
+			for i in range(n):
+				for j in range(n):
+					if matrix[i][j] == 1 and i != j:
+						G.add_edge(W[i], W[j])
+			plt.figure(figsize=(8, 6))
+			pos = nx.spring_layout(G)
+			nx.draw(G, pos, with_labels=True, node_size=2000, node_color=color,
+			font_size=15, font_weight='bold', arrows=True)
+			plt.title(title)
+			plt.show()
+		
+		def hasse_diagram(matrix, W):
+			G_hasse = nx.DiGraph()
+			for i in range(n):
+				for j in range(n):
+				if matrix[i][j] == 1 and i != j:
+					if not any(matrix[i][k] == 1 and matrix[k][j] == 1 for k in range(n) if k != i and k != j):
+						G_hasse.add_edge(W[i], W[j])
+			return G_hasse
+		
+		def draw_hasse(matrix, W, title, color="orange"):
+			H = hasse_diagram(matrix, W)
+			plt.figure(figsize=(8, 6))
+			pos_hasse = nx.spring_layout(H)
+			nx.draw(H, pos_hasse, with_labels=True, node_size=2000, node_color=color,
+			font_size=15, font_weight='bold', arrows=True)
+			plt.title(title)
+			plt.show()
+		
+		# Побуквенное упорядочение
+		matrix_letterwise = build_relation_matrix(W, compare_letterwise)
+		print("Матрица сравнения для побуквенного упорядочения:")
+		print(matrix_letterwise)
+		draw_graph(matrix_letterwise, W, "Граф побуквенного упорядочения")
+		draw_hasse(matrix_letterwise, W, "Диаграмма Хассе побуквенного упорядочения")
+		
+		# Лексикографическое упорядочение
+		matrix_lexicographic = build_relation_matrix(W, compare_lexicographically)
+		print("\nМатрица сравнения для лексикографического упорядочения:")
+		print(matrix_lexicographic)
+		draw_graph(matrix_lexicographic, W, "Граф лексикографического упорядочения")
+		draw_hasse(matrix_lexicographic, W, "Диаграмма Хассе лексикографического упорядочения")
+		
+	\end{lstlisting}
+	
+
+	\begin{figure}[!ht]
+		\centering
+		\includegraphics[width=10cm]{pr2_1.png}
+		\caption{\label{fig:a}%
+			Ответ на задание 2}
+	\end{figure}
+	
+	\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=8.5cm]{pr2_2.png}
+	\caption{\label{fig:a}%
+		Граф побуквенного упорядочения задания 2}
+	\end{figure}
+		
+	\begin{figure}[!ht]
+		\centering
+		\includegraphics[width=8.5cm]{pr2_3.png}
+		\caption{\label{fig:a}%
+			Диаграмма Хассе побуквенного упорядочения задания 2}
+	\end{figure}	
+	
+	\begin{figure}[!ht]
+		\centering
+		\includegraphics[width=8.5cm]{pr2_4.png}
+		\caption{\label{fig:a}%
+			Граф лексикографического упорядочения задания 2}
+	\end{figure}
+	
+	\begin{figure}[!ht]
+		\centering
+		\includegraphics[width=8.5cm]{pr2_5.png}
+		\caption{\label{fig:a}%
+			Диаграмма Хассе лексикографического упорядочения задания 2}
+	\end{figure}
+	
+
+	\newpage
+
+	
+	
+	\newpage
+	
+	\subsection{Задание №3}
+	
+	Построить решетку концептов для контекста с множеством объектов $G = \{1,2,3,4\}$, множеством атрибутов $M = \{a,b,c,d\}$ и следующим отношением $p \subset G\times M$:
+	\[
+	\begin{pmatrix}
+		1 & 0 & 0 & 1 \\
+		0 & 1 & 0 & 1 \\
+		1 & 1 & 0 & 0 \\
+		0 & 1 & 0 & 0
+	\end{pmatrix}
+	\]
+
+		\begin{figure}[!ht]
+		\centering
+		\includegraphics[width=13.5cm]{pr3.png}
+		\caption{\label{fig:a}%
+			Решение задания 3}
+	\end{figure}
+		
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\conclusion
+	В этой работе были изучены основные идеи, связанные с отношениями порядка и упорядоченными множествами. Рассмотрены ключевые определения и свойства, включая сравнимость элементов и отношение покрытия.
+	
+	Были разобраны леммы и утверждения, позволяющие определять эти элементы в конечных упорядоченных множествах, а также приведены примеры для наглядного понимания этих концепций.
+	
+	Исследованы алгоритмы сортировки, нахождения минимальных и максимальных элементов, а также наименьших и наибольших элементов. Эти алгоритмы были реализованы на Python.
+	
+	Разработан алгоритм построения диаграммы Хассе, включающий создание матрицы отношения порядка, удаление транзитивных рёбер и визуализацию графа.
+	
+	Изучены концепты и контексты в рамках формальной концептуальной аналитики, а также алгоритмы построения решетки концептов. Были приведены псевдокоды и примеры реализации на Python.
+	
+	Таким образом, в работе рассмотрен широкий круг вопросов, связанных с бинарными отношениями и их применением в вычислительных задачах.
+		
+	\newpage
+	%Библиографический список, составленный вручную, без использования BibTeX
+	
+	\begin{thebibliography}{99}
+		
+		\bibitem {1} Молчанов В.А. Математическая логика. - Оренбург: ИПК ГОУ ОГУ, 2009. -87с.
+		\label{1}
+		\bibitem {2} Судоплатов С.В. Дискретная математика: учебник / С.В. Судоплатов, Е.В. Овчинникова. - 4-е изд. - Новосибирск: Изд-во НГТУ, 2012. -280с. (Серия "Учебники НГТУ").
+		\label{2}
+		\bibitem{3} Успенский В.А., Верещагин Н.К., Плиско Е. Вводный курс математической логики - 2-е изд. - М.: ФИЗМАТЛИТ, 2004/ - 128 с.
+		\label{3}
+		\bibitem{4} Кривцова И.Е., Лебедев И.С., Настека А.В., Основы дискретной математики.
+		Часть 1. Учебное пособие. – СПб: Университет ИТМО, 2016. – 92с.
+		\label{4}
+		\bibitem{5} Лавров И.А„ Максимова Л.Л. Задачи по теории множеств, мате- матичсской логике и теории алгоритмов. — 5-е изд., исправл, — М.: ФИЗМАТЛИТ, 2002. — 256 с.
+		\label{5}
+	\end{thebibliography}
+	
+	%Библиографический список, составленный с помощью BibTeX
+	%
+	%\bibliographystyle{gost780uv}
+	%\bibliography{thesis}
+	
+	% Окончание основного документа и начало приложений
+	% Каждая последующая секция документа будет являться приложением
+	\appendix
+	\section{}
+	\begin{lstlisting}[numbers=left]
+		def sorter(arr):
+			sorted_arr = sorted(arr)
+			n = len(sorted_arr)
+			matrix = [[1 if i == j or sorted_arr[i] < sorted_arr[j] else 0 for j in range(n)]  
+			return sorted_arr,matrix
+	\end{lstlisting}
+	
+	
+	\section{}
+	
+\begin{lstlisting}[numbers=left]
+	def extract_extreme_values(arr):
+		sorted_arr, matrix = sorter(arr)
+		n = len(sorted_arr)
+		
+		min_element = [sorted_arr[i] for i in range(n) if sum(matrix[j][i] for j in range(n)) == 1]
+		max_element = [sorted_arr[i] for i in range(n) if sum(matrix[i][j] for j in range(n)) == 1]
+		smallest_elements = [sorted_arr[i] for i in range(n) if all(matrix[i][j] == 1 for j in range(n))]
+		largest_elements = [sorted_arr[i] for i in range(n) if all(matrix[j][i] == 1 for j in range(n))]
+		
+		return sorted_arr, matrix, min_element, max_element, smallest_elements, largest_elements
+\end{lstlisting}
+
+	
+	\section{}
+	
+\begin{lstlisting}[numbers=left]
+	import networkx as nx
+	import matplotlib.pyplot as plt
+	from itertools import product
+	
+	def construct_hasse_graph(relation: list[list[int]]) -> None:
+		size = len(relation)
+		G = nx.DiGraph()
+		G.add_nodes_from(range(size))
+		
+
+		for i, j in product(range(size), repeat=2):
+			if relation[i][j] == 1:
+				G.add_edge(i, j)
+		
+
+		for i, j, k in product(range(size), repeat=3):
+			if relation[i][j] == 1 and relation[j][k] == 1 and relation[i][k] == 1:
+				if G.has_edge(i, k):
+					G.remove_edge(i, k)
+		
+		pos = nx.spring_layout(G)
+		nx.draw(G, pos, with_labels=True, node_color='skyblue', node_size=800, font_size=10, font_weight='bold', arrows=False)
+		plt.show()
+	
+	relation = [
+	[1, 0, 0, 1],
+	[0, 1, 1, 0],
+	[1, 0, 1, 0],
+	[0, 1, 1, 0]
+	]
+	
+	construct_hasse_graph(relation)
+\end{lstlisting}
+
+	
+	\section{}
+	
+	\begin{lstlisting}[ numbers=left]
+		import itertools
+		import networkx as nx
+		import matplotlib.pyplot as plt
+		
+
+		context: list[list[int]] = [
+		[1, 0, 0, 1],
+		[0, 1, 1, 0],
+		[1, 0, 1, 0],
+		[0, 1, 1, 0]
+		]
+		
+		def extract_concepts(context: list[list[int]]) -> list[tuple[list[int], list[int]]]:
+			num_objects = len(context)
+			concepts = []
+			
+			for i in range(1, 1 << num_objects):
+				subset = [j for j in range(num_objects) if (i & (1 << j))]
+				if not subset:
+					continue
+				
+				attributes = set(context[subset[0]])
+				for obj in subset[1:]:
+					attributes &= set(context[obj])
+				
+				concepts.append((subset, list(attributes)))
+			
+			return concepts
+		
+		def build_concept_lattice(concepts: list[tuple[list[int], list[int]]]) -> dict[frozenset[int], list[int]]:
+			return {frozenset(concept[0]): concept[1] for concept in concepts}
+		
+		def draw_concept_lattice(lattice: dict[frozenset[int], list[int]]) -> None:
+			G = nx.DiGraph()
+			
+			G.add_nodes_from(lattice.keys())
+
+			for a, b in itertools.product(lattice, repeat=2):
+				if a != b and a.issubset(b):
+					G.add_edge(a, b)
+			
+			pos = nx.spring_layout(G)
+			labels = {node: f"{set(node)}: {set(lattice[node])}" for node in G.nodes}
+	
+			nx.draw(G, pos, with_labels=True, labels=labels, node_size=3000,
+			node_color="skyblue", font_size=10, font_weight="bold", arrows=False)
+			plt.show()
+		
+
+		concepts = extract_concepts(context)
+		lattice = build_concept_lattice(concepts)
+		draw_concept_lattice(lattice)
+	\end{lstlisting}
+	
+	\newpage
+	\begin{figure}
+		
+		Отчет о практике выполнен мною самостоятельно, и на все источники, имеющиеся в отчете, даны соответствующие ссылки.
+		
+	\end{figure}
+	
+	\begin{figure}
+		\begin{flushright}
+			\underline{\hspace{4cm}}  \quad  \underline{\hspace{4cm}} 
+			
+			\scriptsize подпись, дата     \quad     \qquad  \qquad  \qquad        \scriptsize инициалы, фамилия  \qquad  \qquad  \qquad 
+		\end{flushright}
+	\end{figure}
+\end{document}

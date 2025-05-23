@@ -1,31 +1,27 @@
 import pygame
 import sys
+import math
+import random
+from game_objects import Mine
 
 class SettingsWindow:
     def __init__(self):
         pygame.init()
-        self.WIDTH = 500
-        self.HEIGHT = 700
-        self.window = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
-        pygame.display.set_caption("Настройки симуляции")
+        self.width = 500
+        self.height = 700
+        self.window = pygame.display.set_mode((self.width, self.height))
+        pygame.display.set_caption("Настройки")
         
         self.font = pygame.font.SysFont("arial", 20)
-        self.title_font = pygame.font.SysFont("arial", 28, bold=True)
-        self.input_font = pygame.font.SysFont("arial", 24)
+        self.big_font = pygame.font.SysFont("arial", 24, bold=True)
         
-        # Начальные значения
+        # Настройки
         self.num_mines = 10
         self.strategy_id = 0
-        self.spawn_type = 0
-        self.input_active = False 
-        self.input_text = "10"
+        self.spawn_type = 1
         
-        # Настройки скроллбара
-        self.scroll_y = 0
-        self.scroll_speed = 20
-        self.max_scroll = 0
-        
-        self.strategies = [
+        # Списки для отображения
+        self.strategy_names = [
             "Жадный алгоритм (Greedy Attack)",
             "Зигзагообразное движение (Evasive Zigzag)",
             "Спиральное сближение (Spiral Approach)",
@@ -37,15 +33,64 @@ class SettingsWindow:
         
         self.spawn_types = [
             "Случайно вокруг",
-            "Слева",
-            "Справа",
-            "Сверху",
-            "Снизу",
             "На окружности"
         ]
         
+        # Кнопки
+        self.button_height = 30
+        self.button_width = 200
+        self.button_margin = 10
+        
+        # Создаем кнопки
+        self.buttons = {
+            'num_mines': pygame.Rect(
+                self.width//2 - self.button_width//2,
+                50,
+                self.button_width,
+                self.button_height
+            ),
+            'strategy': pygame.Rect(
+                self.width//2 - self.button_width//2,
+                100,
+                self.button_width,
+                self.button_height
+            ),
+            'spawn': pygame.Rect(
+                self.width//2 - self.button_width//2,
+                150,
+                self.button_width,
+                self.button_height
+            ),
+            'start': pygame.Rect(
+                self.width//2 - self.button_width//2,
+                200,
+                self.button_width,
+                self.button_height
+            )
+        }
+        
+        self.input_active = False 
+        self.input_text = "10"
+        
+        # Настройки скроллбара
+        self.scroll_y = 0
+        self.scroll_speed = 20
+        self.max_scroll = 0
+        
         self.running = True
         self.settings_complete = False
+
+    def create_mine_on_circle(self, index, total):
+        radius = 350
+        angle = (2 * math.pi * index) / total
+        x = 600 + radius * math.cos(angle)  # 600 = WIDTH//2
+        y = 400 + radius * math.sin(angle)  # 400 = HEIGHT//2
+        mine = Mine(x, y)
+        # Дополнительная инициализация для spiral_zigzag
+        mine.phi = angle
+        mine.r0 = radius
+        mine.zigzag_phase = random.random() * 2 * math.pi
+        return mine
 
     def draw_scrollbar(self, x, y, width, height, content_height):
         # Рисуем фон скроллбара
@@ -83,8 +128,8 @@ class SettingsWindow:
         self.window.fill((40, 40, 40))
         
         # Заголовок
-        title = self.title_font.render("Настройки симуляции", True, (255, 255, 255))
-        self.window.blit(title, (self.WIDTH//2 - title.get_width()//2, 20))
+        title = self.big_font.render("Настройки симуляции", True, (255, 255, 255))
+        self.window.blit(title, (self.width//2 - title.get_width()//2, 20))
         
         # Количество мин
         mines_text = self.font.render("Количество мин:", True, (255, 255, 255))
@@ -94,11 +139,11 @@ class SettingsWindow:
         input_rect = pygame.Rect(200, 95, 100, 30)
         if self.strategy_id == 5:  # Gathering
             pygame.draw.rect(self.window, (60, 60, 60), input_rect, 2)
-            text_surface = self.input_font.render("3", True, (150, 150, 150))
+            text_surface = self.font.render("3", True, (150, 150, 150))
             self.window.blit(text_surface, (input_rect.x + 5, input_rect.y + 2))
         else:
             pygame.draw.rect(self.window, (255, 255, 255) if self.input_active else (100, 100, 100), input_rect, 2)
-            text_surface = self.input_font.render(self.input_text, True, (255, 255, 255))
+            text_surface = self.font.render(self.input_text, True, (255, 255, 255))
             self.window.blit(text_surface, (input_rect.x + 5, input_rect.y + 2))
         
         # Предупреждения для специальных стратегий
@@ -115,7 +160,7 @@ class SettingsWindow:
         pygame.draw.rect(self.window, (30, 30, 30), strategies_area)
         
         # Рисуем стратегии с учетом скролла
-        for i, strategy in enumerate(self.strategies):
+        for i, strategy in enumerate(self.strategy_names):
             y_pos = 190 + i*35 - self.scroll_y
             if 190 <= y_pos <= 390:  # Видимая область
                 color = (0, 150, 0) if i == self.strategy_id else (100, 100, 100)
@@ -123,21 +168,17 @@ class SettingsWindow:
                                lambda x=i: setattr(self, 'strategy_id', x))
         
         # Рисуем скроллбар
-        self.draw_scrollbar(460, 190, 20, 200, len(self.strategies) * 35)
+        self.draw_scrollbar(460, 190, 20, 200, len(self.strategy_names) * 35)
         
         # Место спавна
         spawn_text = self.font.render("Место спавна:", True, (255, 255, 255))
         self.window.blit(spawn_text, (20, 400))
         
         for i, spawn_type in enumerate(self.spawn_types):
-            if self.strategy_id == 7:  # Для Лидер-ведомые
-                color = (60, 60, 60)  # Серый цвет для неактивных кнопок
-                hover_color = (60, 60, 60)
-            else:
-                color = (0, 150, 0) if i == self.spawn_type else (100, 100, 100)
-                hover_color = (0, 200, 0)
+            color = (0, 150, 0) if i == self.spawn_type else (100, 100, 100)
+            hover_color = (0, 200, 0)
             self.draw_button(spawn_type, 20, 430 + i*35, 460, 30, color, hover_color,
-                           lambda x=i: setattr(self, 'spawn_type', x) if self.strategy_id != 7 else None)
+                           lambda x=i: setattr(self, 'spawn_type', x))
         
         # Кнопка старта
         self.draw_button("Запустить симуляцию", 150, 620, 200, 40, (0, 100, 0), (0, 150, 0),
