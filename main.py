@@ -44,9 +44,18 @@ def create_mine(spawn_type, index=0, total=1):
         elif spawn_type == 3:  # Сверху
             x = random.randint(50, WIDTH-50)
             y = random.randint(50, 100)
-        else:  # Снизу
+        elif spawn_type == 4:  # Снизу
             x = random.randint(50, WIDTH-50)
             y = random.randint(HEIGHT-100, HEIGHT-50)
+        elif spawn_type == 5:  # На окружности
+            # Радиус окружности
+            radius = 350
+            # Угол для текущей мины
+            angle = (2 * math.pi * index) / total
+            # Вычисляем координаты на окружности
+            x = WIDTH//2 + radius * math.cos(angle)
+            y = HEIGHT//2 + radius * math.sin(angle)
+            return Mine(x, y)
             
         # Проверяем расстояние до центра
         dist_to_center = math.hypot(x - WIDTH//2, y - HEIGHT//2)
@@ -244,7 +253,10 @@ class Enemy:
 if strategy_id == 5:  # Gathering
     mines = create_triangle_mines()
 else:
-    mines = [create_mine(spawn_type) for _ in range(num_mines)]
+    if spawn_type == 5:  # На окружности
+        mines = [create_mine(spawn_type, i, num_mines) for i in range(num_mines)]
+    else:
+        mines = [create_mine(spawn_type) for _ in range(num_mines)]
 enemy = Enemy()
 clock = pygame.time.Clock()
 fps = 60

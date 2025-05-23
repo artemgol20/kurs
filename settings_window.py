@@ -40,7 +40,8 @@ class SettingsWindow:
             "Слева",
             "Справа",
             "Сверху",
-            "Снизу"
+            "Снизу",
+            "На окружности"
         ]
         
         self.running = True
