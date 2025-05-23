@@ -32,9 +32,14 @@ pygame.time = MagicMock()
 pygame.time.Clock = MagicMock()
 pygame.time.Clock().tick = MagicMock()
 pygame.time.wait = MagicMock()
+pygame.time.get_ticks = lambda: 0  # Возвращаем 0 для начального времени
+pygame.QUIT = 0
+pygame.KEYDOWN = 0
+pygame.K_UP = 0
+pygame.K_DOWN = 0
 
 # Импортируем необходимые классы и константы из game_objects.py
-from game_objects import Mine, Enemy, Bullet, WIDTH, HEIGHT, MINE_SPEED, BULLET_SPEED, ENEMY_REACTION_TIME
+from game_objects import Mine, Enemy, Bullet, WIDTH, HEIGHT, MINE_SPEED, BULLET_SPEED, ENEMY_REACTION_TIME, MINE_RADIUS, MINE_DETECT_RADIUS
 
 class SimulationAnalytics:
     def __init__(self):
@@ -49,6 +54,10 @@ class SimulationAnalytics:
             "Спиральный зигзаг (Spiral Zigzag)"
         ]
         
+        # Инициализируем время
+        self.start_time = 0
+        self.current_time = 0
+
     def create_mine_on_circle(self, index, total):
         radius = 350
         angle = (2 * math.pi * index) / total
@@ -76,34 +85,35 @@ class SimulationAnalytics:
             mines = [self.create_mine_on_circle(i, num_mines) for i in range(num_mines)]
         
         enemy = Enemy()
-        start_time = time.time()
+        max_iterations = 1000  # Максимальное количество итераций
         timer = 0
-        running = True
-        max_iterations = 1000  # Максимальное количество итераций для предотвращения бесконечного цикла
         
-        while running and timer < max_iterations:
+        while timer < max_iterations:
+            self.current_time += 16  # Увеличиваем время на 16мс (один кадр при 60 FPS)
+            pygame.time.get_ticks = lambda: self.current_time  # Обновляем время для pygame
+            
             # Движение мин
-            if strategy_id == 1:
+            if strategy_id == 1:  # Зигзагообразное движение
                 leader = mines[0] if mines else None
                 for i, mine in enumerate(mines):
                     if mine.alive:
-                        mine.move((enemy.x, enemy.y), leader if i > 0 else None, strategy_id)
+                        mine.move((enemy.x, enemy.y), leader if i > 0 else None, strategy_id=strategy_id)
             else:
                 for mine in mines:
                     if mine.alive:
                         mine.move((enemy.x, enemy.y), strategy_id=strategy_id)
-
+            
             # Обновление врага
             timer += 1
             if timer % ENEMY_REACTION_TIME == 0:
                 enemy.update(mines)
-
+            
             # Обновление пуль
             for bullet in enemy.bullets[:]:
                 bullet.move()
                 hit = False
                 for mine in mines:
-                    if mine.alive and math.hypot(mine.x - bullet.x, mine.y - bullet.y) < 5:
+                    if mine.alive and math.hypot(mine.x - bullet.x, mine.y - bullet.y) < MINE_RADIUS:
                         mine.alive = False
                         hit = True
                         break
@@ -112,36 +122,33 @@ class SimulationAnalytics:
                 elif (bullet.x < 0 or bullet.x > WIDTH or 
                       bullet.y < 0 or bullet.y > HEIGHT):
                     enemy.bullets.remove(bullet)
-
+            
             # Проверка победы мин
             for mine in mines:
-                if mine.alive and math.hypot(mine.x - enemy.x, mine.y - enemy.y) < 40:
-                    end_time = time.time()
+                if mine.alive and math.hypot(mine.x - enemy.x, mine.y - enemy.y) < MINE_DETECT_RADIUS:
                     return {
                         'strategy': self.strategy_names[strategy_id],
                         'num_mines': num_mines,
-                        'time_to_kill': timer / 60,  # Конвертируем в секунды
+                        'time_to_kill': timer,
                         'surviving_mines': sum(1 for m in mines if m.alive),
                         'enemy_destroyed': True
                     }
-
+            
             # Проверка победы врага
             if all(not mine.alive for mine in mines):
-                end_time = time.time()
                 return {
                     'strategy': self.strategy_names[strategy_id],
                     'num_mines': num_mines,
-                    'time_to_kill': timer / 60,  # Конвертируем в секунды
+                    'time_to_kill': timer,
                     'surviving_mines': 0,
                     'enemy_destroyed': False
                 }
         
-        # Если достигнут лимит итераций
-        end_time = time.time()
+        # Если достигли максимального количества итераций
         return {
             'strategy': self.strategy_names[strategy_id],
             'num_mines': num_mines,
-            'time_to_kill': timer / 60,  # Конвертируем в секунды
+            'time_to_kill': max_iterations,
             'surviving_mines': sum(1 for m in mines if m.alive),
             'enemy_destroyed': False
         }
@@ -149,7 +156,7 @@ class SimulationAnalytics:
     def run_all_tests(self):
         # Тестируем разные количества мин для каждой стратегии
         mine_counts = [3, 5, 10]
-        iterations = 20
+        iterations = 40
 
         total_tests = len(self.strategy_names) * len(mine_counts) * iterations
         with tqdm(total=total_tests, desc="Прогресс тестирования") as pbar:
