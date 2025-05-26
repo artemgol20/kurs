@@ -13,10 +13,10 @@ ENEMY_RADIUS = 15
 MINE_DETECT_RADIUS = 40
 ENEMY_DETECT_RADIUS = 150
 BULLET_SPEED = 7
-MINE_SPEED = 0.8
+MINE_SPEED = 1.2  # Увеличиваем базовую скорость
 START_DELAY = 180
 MIN_SPAWN_DISTANCE = 300
-ENEMY_REACTION_TIME = 45
+ENEMY_REACTION_TIME = 60  # Частота стрельбы врага (в кадрах)
 
 class Bullet:
     def __init__(self, x, y, target):
@@ -49,41 +49,86 @@ class Mine:
         self.phi = math.atan2(y - HEIGHT//2, x - WIDTH//2)
         self.r0 = math.hypot(x - WIDTH//2, y - HEIGHT//2) or 1
         self.zigzag_phase = random.random() * 2 * math.pi
+        # Параметры для спирального движения
+        self.spiral_angle = self.phi
+        self.spiral_radius = self.r0
+        # История позиций для следа
+        self.trail = []
+        self.max_trail_length = 300  # Максимальная длина следа
+
+
 
     def move(self, target, leader=None, strategy_id=0):
-        self.tick += 1
+        # Сохраняем текущую позицию в историю
+        self.trail.append((self.x, self.y))
+        if len(self.trail) > self.max_trail_length:
+            self.trail.pop(0)
+
         dx = target[0] - self.x
         dy = target[1] - self.y
         base_angle = math.atan2(dy, dx)
         dist = math.hypot(dx, dy)
 
         if strategy_id == 0:  # Жадный алгоритм
+            self.tick += 1
+            params = STRATEGY_PARAMS["greedy"]
             self.angle = base_angle
-            self.speed = MINE_SPEED * STRATEGY_PARAMS["greedy"]["speed_multiplier"]
+            self.speed = MINE_SPEED * params["speed_multiplier"]
         
         elif strategy_id == 1:  # Зигзагообразное движение
+            self.tick += 1
             params = STRATEGY_PARAMS["zigzag"]
             self.angle = base_angle + math.sin(self.tick / params["period"]) * params["amplitude"]
             self.speed = MINE_SPEED * params["speed_multiplier"]
-        
-        elif strategy_id == 2:  # Спиральное сближение
+    
+        elif strategy_id == 2:  # Spiral Approach via radial+angular
+            self.speed = MINE_SPEED * 2.0 
             params = STRATEGY_PARAMS["spiral"]
-            self.speed = MINE_SPEED * params["speed_multiplier"]
-            X0 = self.x - target[0]
-            Y0 = self.y - target[1]
-            if not hasattr(self, 'phi'):
-                self.phi = math.atan2(Y0, X0)
-                self.r0 = math.hypot(X0, Y0) or 1
+            # Вектор от текущей позиции к цели
+            dx = target[0] - self.x
+            dy = target[1] - self.y
+            dist = math.hypot(dx, dy) or 1
 
-            b = params["spiral_factor"]
-            curr_r = math.hypot(X0, Y0)
-            speed_factor = self.r0 / (curr_r + 1)
-            delta_phi = self.speed * speed_factor / self.r0
-            self.phi += delta_phi
-            r = self.r0 * math.exp(-b * self.phi)
-            self.x = target[0] + r * math.cos(self.phi)
-            self.y = target[1] + r * math.sin(self.phi)
+            # Единичный радиальный вектор
+            ux, uy = dx/dist, dy/dist
+            # Единичный тангенциальный вектор (перпендикулярно радиальному)
+            tx, ty = -uy, ux
+
+            # Задаём компоненты скорости
+            vr = 1.5   # внутрь
+            vt = 3.0  # вокруг
+
+            # Получаем результирующую скорость
+            vx = ux * vr + tx * vt
+            vy = uy * vr + ty * vt
+
+            # Масштабируем так, чтобы общая скорость была MINE_SPEED
+            vnorm = math.hypot(vx, vy) or 1
+            vx *= self.speed / vnorm
+            vy *= self.speed / vnorm
+
+            # Смещаем мину
+            self.x += vx
+            self.y += vy
+            return
+
+        # elif strategy_id == 2:
+        #     self.speed = MINE_SPEED * 0.03  # Уменьшаем базовую скорость
             
+        #     # параметры спирали
+        #     b = STRATEGY_PARAMS["spiral"]["speed_multiplier"] * 0.2  # Уменьшаем скорость закрутки
+        #     dphi = STRATEGY_PARAMS["spiral"]["spiral_factor"] * 0.1  # Уменьшаем изменение угла
+
+        #     # вычисляем угол и радиус по формуле
+        #     phi = self.phi + self.tick * dphi
+        #     r = self.spiral_radius * math.exp(-b * (self.tick * dphi))
+        #     print(r)
+        #     # обновляем координаты относительно цели
+        #     self.x = target[0] + r * math.cos(phi)
+        #     self.y = target[1] + r * math.sin(phi)
+        #     self.tick += 1
+        #     return
+        
         elif strategy_id == 3:  # Фланговая атака
             params = STRATEGY_PARAMS["flank"]
             if self.x < target[0]:
@@ -105,41 +150,40 @@ class Mine:
         elif strategy_id == 6:  # Спиральный зигзаг
             params = STRATEGY_PARAMS["spiral_zigzag"]
             self.speed = MINE_SPEED * params["speed_multiplier"]
-
-            X0 = self.x - target[0]
-            Y0 = self.y - target[1]
-
-            if not hasattr(self, 'phi'):
-                self.phi = math.atan2(Y0, X0)
-                self.r0 = math.hypot(X0, Y0) or 1
-                self.zigzag_phase = random.random() * 2 * math.pi
-
-            b = params["spiral_factor"]
-            curr_r = math.hypot(X0, Y0)
-            speed_factor = self.r0 / (curr_r + 1)
-            delta_phi = self.speed * speed_factor / self.r0
-            self.phi += delta_phi
-            r = self.r0 * math.exp(-b * self.phi)
-
-            zigzag_amplitude = params["zigzag_amplitude"] * (curr_r / self.r0)
-            self.zigzag_phase += params["phase_change"]
-
-            dx_zigzag = zigzag_amplitude * (
-                math.sin(self.zigzag_phase) * math.cos(self.phi + math.pi/2) +
-                math.cos(self.zigzag_phase * 0.5) * math.sin(self.phi)
-            )
-            dy_zigzag = zigzag_amplitude * (
-                math.sin(self.zigzag_phase) * math.sin(self.phi + math.pi/2) -
-                math.cos(self.zigzag_phase * 0.5) * math.cos(self.phi)
-            )
-
-            micro_angle = random.uniform(-params["micro_angle_range"], params["micro_angle_range"])
-            dx_micro = math.cos(self.phi + micro_angle) * params["micro_deviation"]
-            dy_micro = math.sin(self.phi + micro_angle) * params["micro_deviation"]
-
-            self.x = target[0] + r * math.cos(self.phi) + dx_zigzag + dx_micro
-            self.y = target[1] + r * math.sin(self.phi) + dy_zigzag + dy_micro
+            
+            # Используем сохраненные начальные параметры
+            if not hasattr(self, 'initial_angle'):
+                self.initial_angle = math.atan2(self.y - target[1], self.x - target[0])
+                self.initial_radius = math.hypot(self.x - target[0], self.y - target[1])
+            
+            # Вычисляем текущий угол относительно цели
+            current_angle = math.atan2(self.y - target[1], self.x - target[0])
+            # Вычисляем текущее расстояние до цели
+            current_radius = math.hypot(self.x - target[0], self.y - target[1])
+            
+            # Вычисляем новый угол с учетом спирального движения
+            spiral_factor = getattr(self, 'spiral_factor', params["spiral_factor"])
+            new_angle = self.initial_angle + (self.tick * 0.02)  # Постепенное увеличение угла
+            
+            # Вычисляем новый радиус с учетом спирального затухания
+            new_radius = self.initial_radius * math.exp(-spiral_factor * (self.tick * 0.02))
+            
+            # Добавляем зигзагообразное движение
+            zigzag_amplitude = getattr(self, 'zigzag_amplitude', params["zigzag_amplitude"])
+            phase_change = getattr(self, 'phase_change', params["phase_change"])
+            self.zigzag_phase += phase_change
+            
+            # Вычисляем смещение от зигзага
+            dx_zigzag = zigzag_amplitude * math.sin(self.zigzag_phase) * math.cos(new_angle + math.pi/2)
+            dy_zigzag = zigzag_amplitude * math.sin(self.zigzag_phase) * math.sin(new_angle + math.pi/2)
+            
+            # Обновляем позицию с учетом зигзага
+            self.x = target[0] + new_radius * math.cos(new_angle) + dx_zigzag
+            self.y = target[1] + new_radius * math.sin(new_angle) + dy_zigzag
             return
+
+       
+
 
         if strategy_id != 6:
             self.x += math.cos(self.angle) * self.speed
@@ -147,6 +191,17 @@ class Mine:
 
     def draw(self, screen):
         if self.alive:
+            # Отрисовка следа
+            if len(self.trail) > 1:
+                # Создаем градиент от прозрачного к основному цвету
+                for i in range(len(self.trail) - 1):
+                    alpha = int(255 * (i + 1) / len(self.trail))
+                    color = (0, 120, 255, alpha)
+                    pygame.draw.line(screen, color, 
+                                   (int(self.trail[i][0]), int(self.trail[i][1])),
+                                   (int(self.trail[i+1][0]), int(self.trail[i+1][1])), 2)
+
+            # Отрисовка мины
             pygame.draw.circle(screen, MINE_COLOR, (int(self.x), int(self.y)), MINE_RADIUS)
             pygame.draw.circle(screen, (0, 150, 255), (int(self.x), int(self.y)), MINE_DETECT_RADIUS, 1)
 

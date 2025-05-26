@@ -16,7 +16,7 @@ class SettingsWindow:
         self.big_font = pygame.font.SysFont("arial", 24, bold=True)
         
         # Настройки
-        self.num_mines = 10
+        self.num_mines = 3
         self.strategy_id = 0
         self.spawn_type = 1
         
@@ -70,7 +70,7 @@ class SettingsWindow:
         }
         
         self.input_active = False 
-        self.input_text = "10"
+        self.input_text = "3"
         
         # Настройки скроллбара
         self.scroll_y = 0
