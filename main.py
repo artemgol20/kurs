@@ -17,7 +17,7 @@ MINE_DETECT_RADIUS = 40
 ENEMY_DETECT_RADIUS = 150
 BULLET_SPEED = 7
 MINE_SPEED = 1.2  # Увеличиваем базовую скорость
-START_DELAY = 60
+START_DELAY = 180
 MIN_SPAWN_DISTANCE = 300
 ENEMY_REACTION_TIME = 60  # Частота стрельбы врага (в кадрах)
 

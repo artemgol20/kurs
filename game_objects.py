@@ -82,6 +82,7 @@ class Mine:
             self.speed = MINE_SPEED * params["speed_multiplier"]
     
         elif strategy_id == 2:  # Spiral Approach via radial+angular
+            self.tick += 1
             self.speed = MINE_SPEED * 2.0 
             params = STRATEGY_PARAMS["spiral"]
             # Вектор от текущей позиции к цели
@@ -130,6 +131,7 @@ class Mine:
         #     return
         
         elif strategy_id == 3:  # Фланговая атака
+            self.tick += 1
             params = STRATEGY_PARAMS["flank"]
             if self.x < target[0]:
                 self.angle = base_angle + params["attack_angle"]
@@ -146,6 +148,7 @@ class Mine:
             params = STRATEGY_PARAMS["gathering"]
             self.angle = base_angle
             self.speed = MINE_SPEED * params["speed_multiplier"]
+            self.tick += 1
             
         elif strategy_id == 6:  # Спиральный зигзаг
             params = STRATEGY_PARAMS["spiral_zigzag"]
@@ -180,7 +183,9 @@ class Mine:
             # Обновляем позицию с учетом зигзага
             self.x = target[0] + new_radius * math.cos(new_angle) + dx_zigzag
             self.y = target[1] + new_radius * math.sin(new_angle) + dy_zigzag
+            self.tick += 1
             return
+        
 
        
 
