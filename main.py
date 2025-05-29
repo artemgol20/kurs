@@ -6,20 +6,6 @@ from config import *
 from game_objects import Mine, Enemy, Bullet
 from settings_window import SettingsWindow
 
-# Настройки окна
-WIDTH, HEIGHT = 1200, 800
-BG_COLOR = (30, 30, 30)
-MINE_COLOR = (0, 120, 255)
-ENEMY_COLOR = (200, 50, 50)
-MINE_RADIUS = 5
-ENEMY_RADIUS = 15
-MINE_DETECT_RADIUS = 40
-ENEMY_DETECT_RADIUS = 150
-BULLET_SPEED = 7
-MINE_SPEED = 1.2  # Увеличиваем базовую скорость
-START_DELAY = 180
-MIN_SPAWN_DISTANCE = 300
-ENEMY_REACTION_TIME = 60  # Частота стрельбы врага (в кадрах)
 
 # Список стратегий для отображения
 STRATEGY_NAMES = [

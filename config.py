@@ -2,29 +2,39 @@ import pygame
 import math
 
 # Настройки окна
-WIDTH, HEIGHT = 1200, 800
-BG_COLOR = (30, 30, 30)
-MINE_COLOR = (0, 120, 255)
-ENEMY_COLOR = (200, 50, 50)
-MINE_RADIUS = 5
-ENEMY_RADIUS = 15
-MINE_DETECT_RADIUS = 40
-ENEMY_DETECT_RADIUS = 150
-BULLET_SPEED = 7
-MINE_SPEED = 0.8
-START_DELAY = 60
-MIN_SPAWN_DISTANCE = 300
-ENEMY_REACTION_TIME = 45
+WIDTH, HEIGHT = 1200, 800  # Размеры игрового окна
+BG_COLOR = (30, 30, 30)    # Цвет фона (темно-серый)
+
+# Цвета объектов
+MINE_COLOR = (0, 120, 255)     # Цвет мины (голубой)
+ENEMY_COLOR = (200, 50, 50)    # Цвет врага (красный)
+
+# Радиусы объектов
+MINE_RADIUS = 5                # Радиус мины (размер точки)
+ENEMY_RADIUS = 15              # Радиус врага (размер точки)
+MINE_DETECT_RADIUS = 40        # Радиус обнаружения мины (когда мина может уничтожить врага)
+ENEMY_DETECT_RADIUS = 250      # Увеличенный радиус обнаружения врага (было 200)
+
+# Скорости объектов
+BULLET_SPEED = 10              # Увеличенная скорость пуль (было 7)
+MINE_SPEED = 1.4               # Базовая скорость мин
+
+# Временные параметры
+START_DELAY = 180              # Задержка перед началом движения мин (в кадрах)
+ENEMY_REACTION_TIME = 15       # Уменьшенное время реакции врага (было 20)
+
+# Параметры спавна
+MIN_SPAWN_DISTANCE = 300       # Минимальное расстояние от центра для спавна мин
 
 # Список стратегий
 STRATEGY_NAMES = [
-    "Жадный алгоритм (Greedy Attack)",
-    "Зигзагообразное движение (Evasive Zigzag)",
-    "Спиральное сближение (Spiral Approach)",
-    "Фланговая атака (Flank Attack)",
-    "Случайный шум (Random Perturbation)",
-    "Gathering (Сбор в треугольнике)",
-    "Спиральный зигзаг (Spiral Zigzag)"
+    "Жадный алгоритм (Greedy Attack)",           # Прямое движение к цели
+    "Зигзагообразное движение (Evasive Zigzag)", # Движение зигзагом для уклонения
+    "Спиральное сближение (Spiral Approach)",    # Движение по спирали к цели
+    "Фланговая атака (Flank Attack)",           # Атака с флангов
+    "Случайный шум (Random Perturbation)",      # Случайные отклонения от курса
+    "Gathering (Сбор в треугольнике)",          # Сбор в треугольную формацию
+    "Спиральный зигзаг (Spiral Zigzag)"         # Комбинация спирали и зигзага
 ]
 
 # Список типов спавна
@@ -40,35 +50,38 @@ SPAWN_TYPES = [
 # Параметры стратегий
 STRATEGY_PARAMS = {
     "greedy": {
-        "speed_multiplier": 0.9
+        "speed_multiplier": 1.0,    # Множитель скорости для жадного алгоритма
     },
     "zigzag": {
-        "speed_multiplier": 0.85,
-        "amplitude": 1.2,
-        "period": 15
+        "speed_multiplier": 0.7,    # Множитель скорости для зигзагообразного движения
+        "period": 15,               # Период зигзага (в кадрах)
+        "amplitude": 1.2,           # Амплитуда зигзага (в радианах)
     },
     "spiral": {
-        "speed_multiplier": 1.3,
-        "spiral_factor": 0.2
+        "radial_speed": 1.8,    # Скорость радиального движения (внутрь)
+        "angular_speed": 3.0,   # Скорость углового движения (вокруг)
+        "speed_multiplier": 1.0 # Множитель скорости для спирального движения
     },
     "flank": {
-        "speed_multiplier": 0.9,
-        "attack_angle": math.pi / 3
+        "speed_multiplier": 1.2,    # Множитель скорости для фланговой атаки
+        "attack_angle":  math.pi / 3,        # Угол атаки (в радианах)
     },
     "random": {
-        "speed_multiplier": 0.8,
-        "noise_range": 1.5
+        "speed_multiplier": 0.8,    # Множитель скорости для случайного движения
+        "noise_range": 1.5,         # Диапазон случайных отклонений (в радианах)
     },
     "gathering": {
-        "speed_multiplier": 1.3
+        "speed_multiplier": 1.2,    # Множитель скорости для стратегии сбора
     },
     "spiral_zigzag": {
-        "speed_multiplier": 1.2,
-        "spiral_factor": 0.15,
-        "zigzag_amplitude": 40,
-        "zigzag_frequency": 0.2,
-        "phase_change": 0.1,
-        "micro_angle_range": 0.1,
-        "micro_deviation": 5
+        "speed_multiplier": 1.4,    # Оставляем текущую скорость
+        "spiral_factor": 0.05,      # Оставляем текущий фактор спирали
+        "zigzag_amplitude": 80,     # Увеличиваем амплитуду зигзага (было 45)
+        "phase_change": 0.15,       # Увеличиваем скорость изменения фазы (было 0.08)
     }
 } 
+
+# "speed_multiplier": 0.7,    # Уменьшаем множитель скорости (было 0.9)
+#         "spiral_factor": 0.08,      # Уменьшаем фактор закручивания спирали (было 0.15)
+#         "zigzag_amplitude": 60,     # Увеличиваем амплитуду зигзага (было 40)
+#         "phase_change": 0.15,       # Увеличиваем скорость изменения фазы (было 0.1)
