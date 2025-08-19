@@ -41,7 +41,7 @@ class Mine:
         self.spiral_radius = self.r0
         # История позиций для следа
         self.trail = []
-        self.max_trail_length = 300  # Максимальная длина следа
+        self.max_trail_length = 600  # Максимальная длина следа
 
 
 

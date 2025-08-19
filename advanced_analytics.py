@@ -196,13 +196,13 @@ class AdvancedSimulationAnalytics:
             plt.plot(grouped['num_mines'], grouped['enemy_destroyed'] * 100, 
                     'r-', label='Успешность (%)', linewidth=2)
             
-            # График выживших мин (синяя линия) - теперь в процентах
-            plt.plot(grouped['num_mines'], grouped['surviving_mines'] / grouped['num_mines'] * 100, 
-                    'b-', label='Процент выживших мин (%)', linewidth=2)
+            # График выживших мин (синяя линия) - теперь в абсолютных значениях
+            plt.plot(grouped['num_mines'], grouped['surviving_mines'], 
+                    'b-', label='Количество выживших мин', linewidth=2)
             
             plt.title(f'Анализ стратегии: {strategy}', fontsize=14)
             plt.xlabel('Количество мин', fontsize=12)
-            plt.ylabel('Процент (%)', fontsize=12)
+            plt.ylabel('Значение', fontsize=12)
             plt.grid(True, linestyle='--', alpha=0.7)
             plt.legend(fontsize=10)
             
@@ -230,12 +230,12 @@ class AdvancedSimulationAnalytics:
             # Создаем бары
             plt.bar(x - width/2, grouped['enemy_destroyed'] * 100, width, 
                    label='Успешность (%)', color='red')
-            plt.bar(x + width/2, grouped['surviving_mines'] / num_mines * 100, width, 
-                   label='Процент выживших мин (%)', color='blue')
+            plt.bar(x + width/2, grouped['surviving_mines'], width, 
+                   label='Количество выживших мин', color='blue')
             
             plt.title(f'Сравнение стратегий для {num_mines} мин', fontsize=14)
             plt.xlabel('Стратегия', fontsize=12)
-            plt.ylabel('Процент (%)', fontsize=12)
+            plt.ylabel('Значение', fontsize=12)
             plt.xticks(x, grouped['strategy'], rotation=45)
             plt.legend()
             plt.grid(True, linestyle='--', alpha=0.7)
@@ -291,6 +291,14 @@ class AdvancedSimulationAnalytics:
                 print(f"Среднее время до уничтожения врага: {avg_time:.2f} тиков")
                 print(f"Количество успешных атак: {data['enemy_destroyed'].sum()}")
                 print(f"Общее количество тестов: {len(data)}")
+                
+                # Добавляем распределение выживших мин
+                print("\nРаспределение выживших мин:")
+                for i in range(num_mines + 1):
+                    count = len(data[data['surviving_mines'] == i])
+                    percentage = (count / len(data)) * 100
+                    print(f"Выжило {i} мин: {count} раз ({percentage:.1f}%)")
+                
                 print("-" * 30)
 
 def main():

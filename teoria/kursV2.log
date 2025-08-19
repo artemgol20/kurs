@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.9) (preloaded format=pdflatex 2023.12.10)  30 MAY 2025 06:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.9) (preloaded format=pdflatex 2023.12.10)  6 JUN 2025 11:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1040,18 +1040,6 @@ File: l3backend-pdftex.def 2023-04-19 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count327
 \l__pdf_internal_box=\box76
 ) (kursV2.aux)
-Runaway argument?
-{\contentsline {figure}{\numberline {5}{\ignorespaces \IeC {\CYRD }\IeC \ETC.
-! File ended while scanning use of \@writefile.
-<inserted text> 
-                \par 
-l.48 \begin{document}
-                     
-I suspect you have forgotten a `}', causing me
-to read past where you wanted me to stop.
-I'll try to recover; but if the error is serious,
-you'd better type `E' or `X' now and fix your file.
-
 \openout1 = `kursV2.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 48.
@@ -1074,6 +1062,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 48.
 LaTeX Font Info:    ... okay on input line 48.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 48.
 LaTeX Font Info:    ... okay on input line 48.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -1183,11 +1172,22 @@ Package hyperref Info: Link coloring ON on input line 48.
 
  [1
 
-{C:/Users/artem/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] (kursV2.toc)
+{C:/Users/artem/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] (kursV2.toc
+LaTeX Font Info:    Trying to load font information for U+msa on input line 2.
+
+(C:\Users\artem\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 2.
+
+(C:\Users\artem\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+))
 \tf@toc=\write6
 \openout6 = `kursV2.toc'.
 
- [2
+
+[2
 
 ]
 Overfull \hbox (3.89835pt too wide) in paragraph at lines 138--139
@@ -1215,17 +1215,7 @@ Overfull \hbox (8.95543pt too wide) in paragraph at lines 149--150
 о-ве-ден-че-ский шаб-
  []
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 153
-.
-(C:\Users\artem\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 153
-.
 
-(C:\Users\artem\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
 Overfull \hbox (23.7664pt too wide) in paragraph at lines 159--160
 []\T2A/cmr/m/n/14.4 Таким об-ра-зом, каж-дая ми-на стар-ту-ет из точ-ки $\OT1/c
 mr/m/n/14.4 (\OML/cmm/m/it/14.4 x[]; y[]\OT1/cmr/m/n/14.4 ) = (\OML/cmm/m/it/14
@@ -1234,213 +1224,169 @@ mr/m/n/14.4 (\OML/cmm/m/it/14.4 x[]; y[]\OT1/cmr/m/n/14.4 ) = (\OML/cmm/m/it/14
 
 [5
 
-]
-
-LaTeX Warning: Citation `missile_guidance_purepursuit' on page 6 undefined on i
-nput line 176.
-
-
-LaTeX Warning: Citation `zigzag_defense_evasion' on page 6 undefined on input l
-ine 212.
-
-
-Overfull \hbox (4.84734pt too wide) in paragraph at lines 212--213
-\T2A/cmr/m/n/14.4 ис-поль-зу-ет-ся для по-вы-ше-ния жи-ву-че-сти за счјт услож-
-не-ния при-це-ли-ва-ния [\T2A/cmr/bx/n/14.4 ?\T2A/cmr/m/n/14.4 ]. 
- []
-
-[6] [7] [8] [9] [10]
+] [6] [7] [8] [9] [10] [11] [12]
 LaTeX Font Info:    Trying to load font information for T2A+cmtt on input line 
-321.
+419.
 
 (C:\Users\artem\AppData\Local\Programs\MiKTeX\tex/latex/cyrillic\t2acmtt.fd
 File: t2acmtt.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 )
-[11
+[13
 
 ]
-<success_rate_2.png, id=76, 1076.823pt x 569.4876pt>
+<success_rate_2.png, id=196, 1076.823pt x 569.4876pt>
 File: success_rate_2.png Graphic file (type png)
 <use success_rate_2.png>
-Package pdftex.def Info: success_rate_2.png  used on input line 337.
+Package pdftex.def Info: success_rate_2.png  used on input line 435.
 (pdftex.def)             Requested size: 386.95897pt x 204.64172pt.
-<surviving_mines_2.png, id=79, 1076.823pt x 569.4876pt>
+<surviving_mines_2.png, id=199, 1076.823pt x 569.4876pt>
 File: surviving_mines_2.png Graphic file (type png)
 <use surviving_mines_2.png>
-Package pdftex.def Info: surviving_mines_2.png  used on input line 347.
+Package pdftex.def Info: surviving_mines_2.png  used on input line 445.
 (pdftex.def)             Requested size: 386.95897pt x 204.64172pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<surviving_mines_2bar.png, id=80, 858.5676pt x 424.4658pt>
+<surviving_mines_2bar.png, id=200, 858.5676pt x 424.4658pt>
 File: surviving_mines_2bar.png Graphic file (type png)
 <use surviving_mines_2bar.png>
-Package pdftex.def Info: surviving_mines_2bar.png  used on input line 353.
+Package pdftex.def Info: surviving_mines_2bar.png  used on input line 451.
 (pdftex.def)             Requested size: 386.95897pt x 191.30577pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[12 <./success_rate_2.png>]
-Overfull \hbox (24.49333pt too wide) in paragraph at lines 364--365
+[14 <./success_rate_2.png>]
+Overfull \hbox (24.49333pt too wide) in paragraph at lines 462--463
 []\T2A/cmr/bx/n/14.4 Стратегия ѕЗиг-загї \T2A/cmr/m/n/14.4 по-ка-за-ла успеш-но
 сть  17,5% при двух ми-нах.Среднее
  []
 
 
-Overfull \hbox (6.3824pt too wide) in paragraph at lines 373--374
+Overfull \hbox (6.3824pt too wide) in paragraph at lines 471--472
 []\T2A/cmr/bx/n/14.4 Стратегия ѕСпи-раль+Зигзагї \T2A/cmr/m/n/14.4 по-ка-за-ла 
 наи-боль-ший про-цент успеш-
  []
 
-[13 <./surviving_mines_2.png> <./surviving_mines_2bar.png>]
-<success_rate_3.png, id=98, 908.6748pt x 569.4876pt>
+[15 <./surviving_mines_2.png> <./surviving_mines_2bar.png>]
+<success_rate_3.png, id=216, 908.6748pt x 569.4876pt>
 File: success_rate_3.png Graphic file (type png)
 <use success_rate_3.png>
-Package pdftex.def Info: success_rate_3.png  used on input line 382.
+Package pdftex.def Info: success_rate_3.png  used on input line 480.
 (pdftex.def)             Requested size: 386.95897pt x 242.51999pt.
-
-
-LaTeX Warning: Reference `fig:surviving3' on page 14 undefined on input line 38
-8.
-
-<surviving_mines_3.png, id=99, 934.2102pt x 569.4876pt>
+<surviving_mines_3.png, id=218, 934.2102pt x 569.4876pt>
 File: surviving_mines_3.png Graphic file (type png)
 <use surviving_mines_3.png>
-Package pdftex.def Info: surviving_mines_3.png  used on input line 392.
+Package pdftex.def Info: surviving_mines_3.png  used on input line 490.
 (pdftex.def)             Requested size: 386.95897pt x 235.88977pt.
+
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<surviving_mines_3bar.png, id=100, 858.5676pt x 424.4658pt>
+<surviving_mines_3bar.png, id=219, 858.5676pt x 424.4658pt>
 File: surviving_mines_3bar.png Graphic file (type png)
 <use surviving_mines_3bar.png>
-Package pdftex.def Info: surviving_mines_3bar.png  used on input line 398.
+Package pdftex.def Info: surviving_mines_3bar.png  used on input line 496.
 (pdftex.def)             Requested size: 386.95897pt x 191.30577pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[14 <./success_rate_3.png>] [15 <./surviving_mines_3.png>]
-<strategy_analysis_1.png, id=115, 728.2407pt x 397.7259pt>
+[16 <./success_rate_3.png>] [17 <./surviving_mines_3.png>]
+<strategy_analysis_1.png, id=232, 728.2407pt x 397.7259pt>
 File: strategy_analysis_1.png Graphic file (type png)
 <use strategy_analysis_1.png>
-Package pdftex.def Info: strategy_analysis_1.png  used on input line 438.
+Package pdftex.def Info: strategy_analysis_1.png  used on input line 536.
 (pdftex.def)             Requested size: 290.22107pt x 158.50493pt.
-<strategy_analysis_2.png, id=116, 728.2407pt x 397.7259pt>
+<strategy_analysis_2.png, id=233, 728.2407pt x 397.7259pt>
 File: strategy_analysis_2.png Graphic file (type png)
 <use strategy_analysis_2.png>
-Package pdftex.def Info: strategy_analysis_2.png  used on input line 447.
+Package pdftex.def Info: strategy_analysis_2.png  used on input line 545.
 (pdftex.def)             Requested size: 290.22107pt x 158.50493pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[16 <./surviving_mines_3bar.png> <./strategy_analysis_1.png>]
-<strategy_analysis_3.png, id=125, 728.2407pt x 397.7259pt>
+[18 <./surviving_mines_3bar.png> <./strategy_analysis_1.png>]
+<strategy_analysis_3.png, id=242, 728.2407pt x 397.7259pt>
 File: strategy_analysis_3.png Graphic file (type png)
 <use strategy_analysis_3.png>
-Package pdftex.def Info: strategy_analysis_3.png  used on input line 457.
+Package pdftex.def Info: strategy_analysis_3.png  used on input line 555.
 (pdftex.def)             Requested size: 290.22107pt x 158.50493pt.
- [17 <./strategy_analysis_2.png> <./strategy_analysis_3.png>]
-<strategy_analysis_4.png, id=134, 728.2407pt x 397.7259pt>
+ [19 <./strategy_analysis_2.png> <./strategy_analysis_3.png>]
+<strategy_analysis_4.png, id=252, 728.2407pt x 397.7259pt>
 File: strategy_analysis_4.png Graphic file (type png)
 <use strategy_analysis_4.png>
-Package pdftex.def Info: strategy_analysis_4.png  used on input line 465.
+Package pdftex.def Info: strategy_analysis_4.png  used on input line 563.
 (pdftex.def)             Requested size: 290.22107pt x 158.50493pt.
-<strategy_analysis_5.png, id=135, 728.2407pt x 397.7259pt>
+<strategy_analysis_5.png, id=253, 728.2407pt x 397.7259pt>
 File: strategy_analysis_5.png Graphic file (type png)
 <use strategy_analysis_5.png>
-Package pdftex.def Info: strategy_analysis_5.png  used on input line 474.
+Package pdftex.def Info: strategy_analysis_5.png  used on input line 572.
 (pdftex.def)             Requested size: 290.22107pt x 158.50493pt.
-
-
-LaTeX Warning: Reference `fig:spiralZigzagStrategy' on page 18 undefined on inp
-ut line 478.
-
-[18 <./strategy_analysis_4.png> <./strategy_analysis_5.png>]
-
-LaTeX Warning: Reference `fig:2minComparison' on page 19 undefined on input lin
-e 480.
-
-
-LaTeX Warning: Reference `fig:3minComparison' on page 19 undefined on input lin
-e 480.
-
-<strategy_comparison_2mines.png, id=144, 1075.3776pt x 569.0058pt>
+ [20 <./strategy_analysis_4.png> <./strategy_analysis_5.png>]
+<strategy_comparison_2mines.png, id=265, 1075.3776pt x 569.0058pt>
 File: strategy_comparison_2mines.png Graphic file (type png)
 <use strategy_comparison_2mines.png>
-Package pdftex.def Info: strategy_comparison_2mines.png  used on input line 484
+Package pdftex.def Info: strategy_comparison_2mines.png  used on input line 582
 .
 (pdftex.def)             Requested size: 290.22107pt x 153.56415pt.
-<strategy_comparison_3mines.png, id=145, 1075.3776pt x 569.0058pt>
+<strategy_comparison_3mines.png, id=266, 1075.3776pt x 569.0058pt>
 File: strategy_comparison_3mines.png Graphic file (type png)
 <use strategy_comparison_3mines.png>
-Package pdftex.def Info: strategy_comparison_3mines.png  used on input line 491
+Package pdftex.def Info: strategy_comparison_3mines.png  used on input line 589
 .
 (pdftex.def)             Requested size: 290.22107pt x 153.56415pt.
+
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[19 <./strategy_comparison_2mines.png>] [20 <./strategy_comparison_3mines.png>]
+[21 <./strategy_comparison_2mines.png>] [22 <./strategy_comparison_3mines.png>]
 
-Overfull \hbox (3.81706pt too wide) in paragraph at lines 510--511
+Overfull \hbox (3.81706pt too wide) in paragraph at lines 608--609
 []\T2A/cmr/m/n/14.4 Локальная ко-ор-ди-на-ция так-же об-лег-ча-ет син-хро-ни-за
 -цию дей-ствий груп-
  []
 
 
-Overfull \hbox (1.59697pt too wide) in paragraph at lines 516--517
+Overfull \hbox (1.59697pt too wide) in paragraph at lines 614--615
 []\T2A/cmr/bx/n/14.4 Реакция на вне-зап-ные угро-зы: \T2A/cmr/m/n/14.4 при об-н
 а-ру-же-нии угроз аген-ты быст-
  []
 
-[21
+[23
 
-] [22]
-Overfull \hbox (1.10338pt too wide) in paragraph at lines 549--550
+] [24]
+Overfull \hbox (1.10338pt too wide) in paragraph at lines 647--648
 []\T2A/cmr/bx/n/14.4 Обучение про-ти-во-дей-ствию: \T2A/cmr/m/n/14.4 сим-мет-ри
 ч-ное обу-че-ние (self-play) меж-
  []
 
-[23] [24] [25
+[25] [26] [27
 
-] [26]
-Underfull \hbox (badness 1199) in paragraph at lines 594--596
+]
+Underfull \hbox (badness 1199) in paragraph at lines 690--692
 []\T2A/cmr/m/n/14.4 Gazi, V., Passino, K. M. (2004). Stability analysis of swar
 ms. IEEE
  []
 
-[27
+[28
 
-] [28] (kursV2.aux)
+] [29] [30] (kursV2.aux)
  ***********
 LaTeX2e <2023-06-01> patch level 1
 L3 programming layer <2023-08-29>
  ***********
-
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `kursV2.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `kursV2.out':
-(rerunfilecheck)             Before: D41D8CD98F00B204E9800998ECF8427E;0
-(rerunfilecheck)             After:  E723ED470D5BD3D65299F2CF0FC2EB1F;5126.
+Package rerunfilecheck Info: File `kursV2.out' has not changed.
+(rerunfilecheck)             Checksum: A444B1712610095F2F5B39B25673900F;5046.
  ) 
 Here is how much of TeX's memory you used:
- 27005 strings out of 475247
- 494225 string characters out of 5757791
- 1926801 words of memory out of 5000000
- 47994 multiletter control sequences out of 15000+600000
- 566806 words of font info for 57 fonts, out of 8000000 for 9000
+ 27028 strings out of 475247
+ 494469 string characters out of 5757791
+ 1927801 words of memory out of 5000000
+ 48015 multiletter control sequences out of 15000+600000
+ 565203 words of font info for 55 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,6n,87p,1487b,701s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,6n,87p,1486b,701s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\artem\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm08
 00.pk> <C:\Users\artem\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\la
 tt1440.pk> <C:\Users\artem\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi60
@@ -1455,9 +1401,9 @@ ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/art
 em/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/U
 sers/artem/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.
 pfb>
-Output written on kursV2.pdf (28 pages, 2166724 bytes).
+Output written on kursV2.pdf (30 pages, 2194939 bytes).
 PDF statistics:
- 581 PDF objects out of 1000 (max. 8388607)
- 78 named destinations out of 1000 (max. 500000)
- 78 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 704 PDF objects out of 1000 (max. 8388607)
+ 82 named destinations out of 1000 (max. 500000)
+ 238 words of extra memory for PDF output out of 10000 (max. 10000000)
 
