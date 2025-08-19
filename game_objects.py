@@ -4,19 +4,6 @@ import random
 from config import *
 
 # Настройки окна
-WIDTH, HEIGHT = 1200, 800
-BG_COLOR = (30, 30, 30)
-MINE_COLOR = (0, 120, 255)
-ENEMY_COLOR = (200, 50, 50)
-MINE_RADIUS = 5
-ENEMY_RADIUS = 15
-MINE_DETECT_RADIUS = 40
-ENEMY_DETECT_RADIUS = 150
-BULLET_SPEED = 7
-MINE_SPEED = 1.2  # Увеличиваем базовую скорость
-START_DELAY = 180
-MIN_SPAWN_DISTANCE = 300
-ENEMY_REACTION_TIME = 60  # Частота стрельбы врага (в кадрах)
 
 class Bullet:
     def __init__(self, x, y, target):
@@ -54,7 +41,7 @@ class Mine:
         self.spiral_radius = self.r0
         # История позиций для следа
         self.trail = []
-        self.max_trail_length = 300  # Максимальная длина следа
+        self.max_trail_length = 600  # Максимальная длина следа
 
 
 
@@ -76,13 +63,14 @@ class Mine:
             self.speed = MINE_SPEED * params["speed_multiplier"]
         
         elif strategy_id == 1:  # Зигзагообразное движение
+            #self.speed=MINE_SPEED*1.3
             self.tick += 1
             params = STRATEGY_PARAMS["zigzag"]
             self.angle = base_angle + math.sin(self.tick / params["period"]) * params["amplitude"]
             self.speed = MINE_SPEED * params["speed_multiplier"]
     
         elif strategy_id == 2:  # Spiral Approach via radial+angular
-            self.speed = MINE_SPEED * 2.0 
+            self.tick += 1
             params = STRATEGY_PARAMS["spiral"]
             # Вектор от текущей позиции к цели
             dx = target[0] - self.x
@@ -94,16 +82,17 @@ class Mine:
             # Единичный тангенциальный вектор (перпендикулярно радиальному)
             tx, ty = -uy, ux
 
-            # Задаём компоненты скорости
-            vr = 1.5   # внутрь
-            vt = 3.0  # вокруг
+            # Задаём компоненты скорости из конфигурации
+            vr = params["radial_speed"]   # внутрь
+            vt = params["angular_speed"]  # вокруг
 
             # Получаем результирующую скорость
             vx = ux * vr + tx * vt
             vy = uy * vr + ty * vt
 
-            # Масштабируем так, чтобы общая скорость была MINE_SPEED
+            # Масштабируем так, чтобы общая скорость была MINE_SPEED * speed_multiplier
             vnorm = math.hypot(vx, vy) or 1
+            self.speed = MINE_SPEED * params["speed_multiplier"]
             vx *= self.speed / vnorm
             vy *= self.speed / vnorm
 
@@ -130,6 +119,7 @@ class Mine:
         #     return
         
         elif strategy_id == 3:  # Фланговая атака
+            self.tick += 1
             params = STRATEGY_PARAMS["flank"]
             if self.x < target[0]:
                 self.angle = base_angle + params["attack_angle"]
@@ -146,11 +136,12 @@ class Mine:
             params = STRATEGY_PARAMS["gathering"]
             self.angle = base_angle
             self.speed = MINE_SPEED * params["speed_multiplier"]
+            self.tick += 1
             
         elif strategy_id == 6:  # Спиральный зигзаг
             params = STRATEGY_PARAMS["spiral_zigzag"]
             self.speed = MINE_SPEED * params["speed_multiplier"]
-            
+
             # Используем сохраненные начальные параметры
             if not hasattr(self, 'initial_angle'):
                 self.initial_angle = math.atan2(self.y - target[1], self.x - target[0])
@@ -178,9 +169,16 @@ class Mine:
             dy_zigzag = zigzag_amplitude * math.sin(self.zigzag_phase) * math.sin(new_angle + math.pi/2)
             
             # Обновляем позицию с учетом зигзага
+            # if(abs(self.x-(target[0] + new_radius * math.cos(new_angle) + dx_zigzag)))>3:
+            #     self.x=(target[0] + new_radius * math.cos(new_angle) + dx_zigzag)-0.5
+            #     self.y=(target[1] + new_radius * math.sin(new_angle) + dy_zigzag)-0.5
+            #     return
+            
             self.x = target[0] + new_radius * math.cos(new_angle) + dx_zigzag
             self.y = target[1] + new_radius * math.sin(new_angle) + dy_zigzag
+            self.tick += 1
             return
+        
 
        
 
@@ -212,18 +210,26 @@ class Enemy:
         self.bullets = []
         self.target_history = []
         self.last_shot_time = 0
-        self.prediction_accuracy = 0.7
-        self.max_history = 10
+        self.prediction_accuracy = 0.85
+        self.max_history = 15
 
     def predict_target_position(self, mine):
         if len(self.target_history) < 2:
             return mine.x, mine.y
 
-        dx = mine.x - self.target_history[-1][0]
-        dy = mine.y - self.target_history[-1][1]
-        
-        predicted_x = mine.x + dx * self.prediction_accuracy
-        predicted_y = mine.y + dy * self.prediction_accuracy
+        if len(self.target_history) >= 3:
+            dx1 = self.target_history[-1][0] - self.target_history[-2][0]
+            dy1 = self.target_history[-1][1] - self.target_history[-2][1]
+            dx2 = self.target_history[-2][0] - self.target_history[-3][0]
+            dy2 = self.target_history[-2][1] - self.target_history[-3][1]
+            
+            predicted_x = mine.x + dx1 * self.prediction_accuracy + (dx1 - dx2) * 0.5
+            predicted_y = mine.y + dy1 * self.prediction_accuracy + (dy1 - dy2) * 0.5
+        else:
+            dx = mine.x - self.target_history[-1][0]
+            dy = mine.y - self.target_history[-1][1]
+            predicted_x = mine.x + dx * self.prediction_accuracy
+            predicted_y = mine.y + dy * self.prediction_accuracy
         
         return predicted_x, predicted_y
 
@@ -246,7 +252,7 @@ class Enemy:
 
             if current_time - self.last_shot_time > ENEMY_REACTION_TIME * 16:
                 target_x, target_y = self.predict_target_position(closest)
-                deviation = random.uniform(-10, 10)
+                deviation = random.uniform(-5, 5)
                 target_x += deviation
                 target_y += deviation
                 self.bullets.append(Bullet(self.x, self.y, (target_x, target_y)))

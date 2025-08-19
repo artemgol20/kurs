@@ -116,74 +116,7 @@ class SimulationAnalytics:
             else:
                 for mine in mines:
                     if mine.alive:
-                        if strategy_id == 2:  # Спиральное сближение
-                            mine.speed = MINE_SPEED * 1.3
-                            # Сдвигаем координаты так, чтобы враг был центром спирали
-                            X0 = mine.x - enemy.x
-                            Y0 = mine.y - enemy.y
-                            
-                            # Используем сохраненные начальные параметры
-                            if not hasattr(mine, 'phi'):
-                                mine.phi = math.atan2(Y0, X0)
-                                mine.r0 = math.hypot(X0, Y0) or 1
-                            else:
-                                # Восстанавливаем начальные параметры из сохраненных значений
-                                mine.phi = mine.phi
-                                mine.r0 = mine.r0
-
-                            # Параметр спирали (чем больше, тем плотнее скрутка)
-                            b = 0.2
-
-                            # Текущее расстояние до цели
-                            curr_r = math.hypot(X0, Y0)
-
-                            # Увеличиваем угол (скорость закрутки)
-                            # Чем ближе к цели, тем больше скорость
-                            speed_factor = mine.r0 / (curr_r + 1)  # +1 чтобы избежать деления на 0
-                            delta_phi = mine.speed * speed_factor / mine.r0
-                            mine.phi += delta_phi
-
-                            # Новое расстояние: r = r0 * exp(-b * phi)
-                            r = mine.r0 * math.exp(-b * mine.phi)
-
-                            # Обратно в декартовы, с центром в target
-                            mine.x = enemy.x + r * math.cos(mine.phi)
-                            mine.y = enemy.y + r * math.sin(mine.phi)
-                        elif strategy_id == 6:  # Спиральный зигзаг
-                            params = STRATEGY_PARAMS["spiral_zigzag"]
-                            mine.speed = MINE_SPEED * params["speed_multiplier"]
-                            
-                            # Используем сохраненные начальные параметры
-                            if not hasattr(mine, 'initial_angle'):
-                                mine.initial_angle = math.atan2(mine.y - enemy.y, mine.x - enemy.x)
-                                mine.initial_radius = math.hypot(mine.x - enemy.x, mine.y - enemy.y)
-                            
-                            # Вычисляем текущий угол относительно цели
-                            current_angle = math.atan2(mine.y - enemy.y, mine.x - enemy.x)
-                            # Вычисляем текущее расстояние до цели
-                            current_radius = math.hypot(mine.x - enemy.x, mine.y - enemy.y)
-                            
-                            # Вычисляем новый угол с учетом спирального движения
-                            spiral_factor = getattr(mine, 'spiral_factor', params["spiral_factor"])
-                            new_angle = mine.initial_angle + (timer * 0.02)  # Постепенное увеличение угла
-                            
-                            # Вычисляем новый радиус с учетом спирального затухания
-                            new_radius = mine.initial_radius * math.exp(-spiral_factor * (timer * 0.02))
-                            
-                            # Добавляем зигзагообразное движение
-                            zigzag_amplitude = getattr(mine, 'zigzag_amplitude', params["zigzag_amplitude"])
-                            phase_change = getattr(mine, 'phase_change', params["phase_change"])
-                            mine.zigzag_phase += phase_change
-                            
-                            # Вычисляем смещение от зигзага
-                            dx_zigzag = zigzag_amplitude * math.sin(mine.zigzag_phase) * math.cos(new_angle + math.pi/2)
-                            dy_zigzag = zigzag_amplitude * math.sin(mine.zigzag_phase) * math.sin(new_angle + math.pi/2)
-                            
-                            # Обновляем позицию с учетом зигзага
-                            mine.x = enemy.x + new_radius * math.cos(new_angle) + dx_zigzag
-                            mine.y = enemy.y + new_radius * math.sin(new_angle) + dy_zigzag
-                        else:
-                            mine.move((enemy.x, enemy.y), strategy_id=strategy_id)
+                        mine.move((enemy.x, enemy.y), strategy_id=strategy_id)
             
             # Обновление врага
             timer += 1
@@ -235,8 +168,8 @@ class SimulationAnalytics:
         }
 
     def run_all_tests(self):
-        mine_counts = [2,3, 5, 7]
-        iterations = 40
+        mine_counts = [2,3]
+        iterations = 200
 
         total_tests = len(self.strategy_names) * len(mine_counts) * iterations
         with tqdm(total=total_tests, desc="Прогресс тестирования") as pbar:
@@ -267,13 +200,13 @@ class SimulationAnalytics:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
         strategy_short_names = {
-            "Жадный алгоритм (Greedy Attack)": "Greedy",
-            "Зигзагообразное движение (Evasive Zigzag)": "Zigzag",
-            "Спиральное сближение (Spiral Approach)": "Spiral",
-            "Фланговая атака (Flank Attack)": "Flank",
-            "Случайный шум (Random Perturbation)": "Random",
-            "Gathering (Сбор в треугольнике)": "Gathering",
-            "Спиральный зигзаг (Spiral Zigzag)": "Spiral Zigzag"
+            "Жадный алгоритм (Greedy Attack)": "Прямая",
+            "Зигзагообразное движение (Evasive Zigzag)": "Зигзаз",
+            "Спиральное сближение (Spiral Approach)": "Спираль",
+            "Фланговая атака (Flank Attack)": "Фланговая",
+            "Случайный шум (Random Perturbation)": "Рандом",
+            "Gathering (Сбор в треугольнике)": "Треугольник",
+            "Спиральный зигзаг (Spiral Zigzag)": "Спираль + зигзаг"
         }
         df['strategy_short'] = df['strategy'].map(strategy_short_names)
         

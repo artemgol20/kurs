@@ -880,8 +880,9 @@ itemsep=0pt%\parsep
 
 \renewenvironment{thebibliography}[1]
 {
-  \textbf{\cyr
-  Основные источники информации:}
+  \starsection{\cyr\CYRS\CYRP\CYRI\CYRS\CYRO\CYRK\ \CYRI\CYRS\CYRP\CYRO\CYRL%
+  \CYRSFTSN\CYRZ\CYRO\CYRV\CYRA\CYRN\CYRN\CYRERY\CYRH\ \CYRI\CYRS\CYRT%
+  \CYRO\CYRCH\CYRN\CYRI\CYRK\CYRO\CYRV}
   \list{\@biblabel{\@arabic\c@enumiv}}%
   {\settowidth\labelwidth{\@biblabel{#1}}%
     \leftmargin\labelwidth
